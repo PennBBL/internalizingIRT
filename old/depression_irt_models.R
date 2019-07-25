@@ -1,0 +1,276 @@
+### This script explores the measurement invariance characteristics of 1-, 2- and 3-PL
+### models for psychosis items by children and their parents. It establishes if the item
+### location parameters are invariant across sex, as reported by the children and their
+### parents. If the 2- or 3-PL models turn out to be appropriate, it will also characterize
+### the discrimination and lower-bound parameters' invariance status.
+###
+### Ellyn Butler
+### March 3, 2019 - present
+
+# load packages
+library('psych')
+library('car')
+library('ggplot2')
+library('gridExtra')
+source('/home/butellyn/goassess_validation/depression/find_bad_bblids.R')
+
+# Load the data 
+df <- read.csv("/home/butellyn/parentchild_psychopathology/data/GOA_itemwise_for_reporter_agreement.csv") 
+demo <- read.csv("/home/butellyn/age_prediction/data/n9498_demographics_go1_20161212.csv")
+
+
+######## Middle Proband (11-17) ########
+
+### Check that answers make sense
+depcols <- colnames(df)[grepl("DEP", colnames(df))][1:26]
+dep_mp_df <- df[df$INTERVIEW_TYPE == "MP",c("PROBAND_BBLID", depcols)]
+names(dep_mp_df)[names(dep_mp_df) == 'PROBAND_BBLID'] <- 'bblid'
+dep_mp_df <- merge(dep_mp_df, demo, by='bblid')
+dep_mp_df$ageAtClinicalAssess1 <- dep_mp_df$ageAtClinicalAssess1/12
+
+rownames(dep_mp_df) <- 1:nrow(dep_mp_df)
+
+suspicious_bblids <- findBadBBLIDs(dep_mp_df)
+dep_mp_df <- cleanDepression(dep_mp_df, suspicious_bblids)
+
+
+### fit 2PL
+dep_mp_df2 <- dep_mp_df
+dep_mp_df2$DEP018 <- recode(dep_mp_df$DEP018, "0 = 0; 1:10 = 1")
+dep_mp_df2$DEP019 <- recode(dep_mp_df$DEP019, "0 = 0; 1:10 = 1")
+
+# Females
+dep_mp_F <- dep_mp_df2[dep_mp_df2$sex == 2,]
+items_mp_F <- dep_mp_F[,colnames(dep_mp_F)[grepl("DEP", colnames(dep_mp_F))]]
+irt_results_mp_F <- irt.fa(items_mp_F) 
+loc_param_mp_F <- irt_results_mp_F$irt$difficulty[[1]]
+disc_param_mp_F <- irt_results_mp_F$irt$discrimination
+
+# Males
+dep_mp_M <- dep_mp_df2[dep_mp_df2$sex == 1,]
+items_mp_M <- dep_mp_M[,colnames(dep_mp_M)[grepl("DEP", colnames(dep_mp_M))]]
+irt_results_mp_M <- irt.fa(items_mp_M) 
+loc_param_mp_M <- irt_results_mp_M$irt$difficulty[[1]]
+disc_param_mp_M <- irt_results_mp_M$irt$discrimination
+
+
+### IRF plots
+Pr <- function(theta, a, b) {
+  exp(a * (theta - b))/(1 + exp(a * (theta - b)))
+}
+
+for (i in 1:18) {
+	item_df <- data.frame(matrix(0, ncol=5, nrow=240))
+	item_df$theta <- c(seq(-4, 7.9, .1), seq(-4, 7.9, .1))
+	item_df$disc <- rep(c(disc_param_mp_F[[i]], disc_param_mp_M[[i]]), each=120) #b 
+	item_df$loc <- rep(c(loc_param_mp_F[[i]], loc_param_mp_M[[i]]), each=120) #a
+	item_df$sex <- rep(c("Female", "Male"), each=120)
+	for (row in 1:nrow(item_df)) {
+		item_df[row, "prob"] <- Pr(item_df[row, "theta"], item_df[row, "loc"], item_df[row, "disc"])
+	}
+	p_irf <- ggplot(item_df, aes(x=theta, y=prob, group=sex, colour=sex)) + 
+		geom_line(size=2) + ggtitle(paste0("Item ", i, " Response Functions (MP)")) + xlab("Theta") + ylab("Probability") + 
+		theme_minimal() + theme(plot.title = element_text(size=26, face="bold"))
+	assign(paste0("item", i, "_mp_df"), item_df)
+	assign(paste0("p_irf_mp_", i), p_irf)
+}
+
+### Invariance measurements across sexes
+
+# Pearson Correlation
+corr_loc_mp_FM <- corr.test(loc_param_mp_F, loc_param_mp_M) # .96
+corr_disc_mp_FM <- corr.test(disc_param_mp_F, disc_param_mp_M)
+
+# Difference in IRFs
+# 1) Put items on same scale by using total characteristic function equating approach
+
+# 2) Compute RMSD between each pair of items
+
+
+### Find number of people who answered no to all depression items
+depcols2 <- colnames(dep_mp_df2)[grepl("DEP", colnames(dep_mp_df2))]
+num_onlyZeros_mp <- 0
+for (i in 1:nrow(dep_mp_df2)) {
+	depvals <- as.numeric(dep_mp_df2[i, depcols2])
+	sumrow <- sum(depvals)
+	if (sumrow == 0) { num_onlyZeros_mp <- num_onlyZeros_mp + 1 }
+}
+
+
+
+######## Middle Informant ########
+
+### Check that answers make sense
+depcols <- colnames(df)[grepl("DEP", colnames(df))][1:26]
+dep_mi_df <- df[df$INTERVIEW_TYPE == "MI",c("PROBAND_BBLID", depcols)]
+names(dep_mi_df)[names(dep_mi_df) == 'PROBAND_BBLID'] <- 'bblid'
+dep_mi_df <- merge(dep_mi_df, demo, by='bblid')
+dep_mi_df$ageAtClinicalAssess1 <- dep_mi_df$ageAtClinicalAssess1/12
+
+rownames(dep_mi_df) <- 1:nrow(dep_mi_df)
+
+suspicious_bblids <- findBadBBLIDs(dep_mi_df)
+dep_mi_df <- cleanDepression(dep_mi_df, suspicious_bblids)
+
+
+### fit 2PL
+dep_mi_df2 <- dep_mi_df
+dep_mi_df2$DEP018 <- recode(dep_mi_df$DEP018, "0 = 0; 1:10 = 1")
+dep_mi_df2$DEP019 <- recode(dep_mi_df$DEP019, "0 = 0; 1:10 = 1")
+
+# Females
+dep_mi_F <- dep_mi_df2[dep_mi_df2$sex == 2,]
+items_mi_F <- dep_mi_F[,colnames(dep_mi_F)[grepl("DEP", colnames(dep_mi_F))]]
+irt_results_mi_F <- irt.fa(items_mi_F) 
+loc_param_mi_F <- irt_results_mi_F$irt$difficulty[[1]]
+disc_param_mi_F <- irt_results_mi_F$irt$discrimination
+
+# Males
+dep_mi_M <- dep_mi_df2[dep_mi_df2$sex == 1,]
+items_mi_M <- dep_mi_M[,colnames(dep_mi_M)[grepl("DEP", colnames(dep_mi_M))]]
+irt_results_mi_M <- irt.fa(items_mi_M) 
+loc_param_mi_M <- irt_results_mi_M$irt$difficulty[[1]]
+disc_param_mi_M <- irt_results_mi_M$irt$discrimination
+
+
+### IRF plots
+for (i in 1:18) {
+	item_df <- data.frame(matrix(0, ncol=5, nrow=240))
+	item_df$theta <- c(seq(-4, 7.9, .1), seq(-4, 7.9, .1))
+	item_df$disc <- rep(c(disc_param_mi_F[[i]], disc_param_mi_M[[i]]), each=120) #b 
+	item_df$loc <- rep(c(loc_param_mi_F[[i]], loc_param_mi_M[[i]]), each=120) #a
+	item_df$sex <- rep(c("Female", "Male"), each=120)
+	for (row in 1:nrow(item_df)) {
+		item_df[row, "prob"] <- Pr(item_df[row, "theta"], item_df[row, "loc"], item_df[row, "disc"])
+	}
+	p_irf <- ggplot(item_df, aes(x=theta, y=prob, group=sex, colour=sex)) + 
+		geom_line(size=2) + ggtitle(paste0("Item ", i, " Response Functions (MI)")) + xlab("Theta") + ylab("Probability") + 
+		theme_minimal() + theme(plot.title = element_text(size=26, face="bold"))
+	assign(paste0("item", i, "_mi_df"), item_df)
+	assign(paste0("p_irf_mi_", i), p_irf)
+}
+
+### Invariance measurements across sexes
+
+# Pearson Correlation
+corr_loc_mi_FM <- corr.test(loc_param_mi_F, loc_param_mi_M)
+corr_disc_mi_FM <- corr.test(disc_param_mi_F, disc_param_mi_M)
+
+# Difference in IRFs
+# 1) Put items on same scale by using total characteristic function equating approach
+
+# 2) Compute RMSD between each pair of items
+
+
+### Find number of people who answered no to all depression items
+depcols2 <- colnames(dep_mi_df2)[grepl("DEP", colnames(dep_mi_df2))]
+num_onlyZeros_mi <- 0
+for (i in 1:nrow(dep_mi_df2)) {
+	depvals <- as.numeric(dep_mi_df2[i, depcols2])
+	sumrow <- sum(depvals)
+	if (sumrow == 0) { num_onlyZeros_mi <- num_onlyZeros_mi + 1 }
+}
+
+
+
+
+
+######## Compare Middle Proband and Informant Parameters ########
+
+# Compare sexes
+df_locs_mp_FM <- data.frame(femaleparams=loc_param_mp_F, maleparams=loc_param_mp_M)
+p_locs_mp_FM <- ggplot(df_locs_mp_FM, aes(x=femaleparams, y=maleparams)) + geom_point() + theme_minimal() +
+	labs(title = "Female vs. Male Location Est. (MP)", subtitle = paste0("r = ", round(corr_loc_mp_FM$r, digits=2), 
+	", (N F = ", nrow(dep_mp_F), ", N M = ", nrow(dep_mp_M), ")"), x = "Females", y = "Males") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_locs_mi_FM <- data.frame(femaleparams=loc_param_mi_F, maleparams=loc_param_mi_M)
+p_locs_mi_FM <- ggplot(df_locs_mi_FM, aes(x=femaleparams, y=maleparams)) + geom_point() + theme_minimal() +
+	labs(title = "Female vs. Male Location Est. (MI)", subtitle = paste0("r = ", round(corr_loc_mi_FM$r, digits=2), 
+	", (N F = ", nrow(dep_mi_F), ", N M = ", nrow(dep_mi_M), ")"), x = "Females", y = "Males") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_discs_mp_FM <- data.frame(femaleparams=disc_param_mp_F, maleparams=disc_param_mp_M)
+p_discs_mp_FM <- ggplot(df_locs_mp_FM, aes(x=femaleparams, y=maleparams)) + geom_point() + theme_minimal() +
+	labs(title = "Female vs. Male Discrim. Est. (MP)", subtitle = paste0("r = ", round(corr_disc_mp_FM$r, digits=2), 
+	", (N F = ", nrow(dep_mp_F), ", N M = ", nrow(dep_mp_M), ")"), x = "Females", y = "Males") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_discs_mi_FM <- data.frame(femaleparams=disc_param_mi_F, maleparams=disc_param_mi_M)
+p_discs_mi_FM <- ggplot(df_locs_mi_FM, aes(x=femaleparams, y=maleparams)) + geom_point() + theme_minimal() +
+	labs(title = "Female vs. Male Discrim. Est. (MI)", subtitle = paste0("r = ", round(corr_disc_mi_FM$r, digits=2), 
+	", (N F = ", nrow(dep_mi_F), ", N M = ", nrow(dep_mi_M), ")"), x = "Females", y = "Males") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+# Compare informants
+df_locs_mpmi_F <- data.frame(mpparams=loc_param_mp_F, miparams=loc_param_mi_F)
+corr_loc_mpmi_F <- corr.test(loc_param_mp_F, loc_param_mi_F)
+p_locs_mpmi_F <- ggplot(df_locs_mpmi_F, aes(x=mpparams, y=miparams)) + geom_point() + theme_minimal() +
+	labs(title = "MP vs. MI Location Est. (Female)", subtitle = paste0("r = ", round(corr_loc_mpmi_F$r, digits=2), 
+	", (N MP = ", nrow(dep_mp_F), ", N MI = ", nrow(dep_mi_F), ")"), x = "Middle Probands", y = "Middle Informants") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_locs_mpmi_M <- data.frame(mpparams=loc_param_mp_M, miparams=loc_param_mi_M)
+corr_loc_mpmi_M <- corr.test(loc_param_mp_M, loc_param_mi_M)
+p_locs_mpmi_M <- ggplot(df_locs_mpmi_M, aes(x=mpparams, y=miparams)) + geom_point() + theme_minimal() +
+	labs(title = "MP vs. MI Location Est. (Male)", subtitle = paste0("r = ", round(corr_loc_mpmi_M$r, digits=2), 
+	", (N MP = ", nrow(dep_mp_M), ", N MI = ", nrow(dep_mi_M), ")"), x = "Middle Probands", y = "Middle Informants") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_discs_mpmi_F <- data.frame(mpparams=disc_param_mp_F, miparams=disc_param_mi_F)
+colnames(df_discs_mpmi_F) <- c("mpparams", "miparams")
+corr_disc_mpmi_F <- corr.test(disc_param_mp_F, disc_param_mi_F)
+p_discs_mpmi_F <- ggplot(df_discs_mpmi_F, aes(x=mpparams, y=miparams)) + geom_point() + theme_minimal() +
+	labs(title = "MP vs. MI Discrim. Est. (Female)", subtitle = paste0("r = ", round(corr_disc_mpmi_F$r, digits=2), 
+	", (N MP = ", nrow(dep_mp_F), ", N MI = ", nrow(dep_mi_F), ")"), x = "Middle Probands", y = "Middle Informants") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+df_discs_mpmi_M <- data.frame(mpparams=disc_param_mp_M, miparams=disc_param_mi_M)
+colnames(df_discs_mpmi_M) <- c("mpparams", "miparams")
+corr_disc_mpmi_M <- corr.test(disc_param_mp_M, disc_param_mi_M)
+p_discs_mpmi_M <- ggplot(df_discs_mpmi_M, aes(x=mpparams, y=miparams)) + geom_point() + theme_minimal() +
+	labs(title = "MP vs. MI Discrim. Est. (Male)", subtitle = paste0("r = ", round(corr_disc_mpmi_M$r, digits=2), 
+	", (N MP = ", nrow(dep_mp_M), ", N MI = ", nrow(dep_mi_M), ")"), x = "Middle Probands", y = "Middle Informants") + 
+	geom_smooth(method=lm, se=FALSE) + theme(plot.title = element_text(size=26, face="bold"))
+
+
+#### Export pdf
+
+pdf(file="/home/butellyn/parentchild_psychopathology/plots/dep_paramComparisons.pdf", width=16, height=9)
+grid.arrange(p_locs_mp_FM, p_locs_mi_FM, ncol=2)
+grid.arrange(p_discs_mp_FM, p_discs_mi_FM, ncol=2)
+grid.arrange(p_locs_mpmi_F, p_locs_mpmi_M, ncol=2)
+grid.arrange(p_discs_mpmi_F, p_discs_mpmi_M, ncol=2)
+grid.arrange(p_irf_mp_1, p_irf_mi_1, ncol=2)
+grid.arrange(p_irf_mp_2, p_irf_mi_2, ncol=2)
+grid.arrange(p_irf_mp_3, p_irf_mi_3, ncol=2)
+grid.arrange(p_irf_mp_4, p_irf_mi_4, ncol=2)
+grid.arrange(p_irf_mp_5, p_irf_mi_5, ncol=2)
+grid.arrange(p_irf_mp_6, p_irf_mi_6, ncol=2)
+grid.arrange(p_irf_mp_7, p_irf_mi_7, ncol=2)
+grid.arrange(p_irf_mp_8, p_irf_mi_8, ncol=2)
+grid.arrange(p_irf_mp_9, p_irf_mi_9, ncol=2)
+grid.arrange(p_irf_mp_10, p_irf_mi_10, ncol=2)
+grid.arrange(p_irf_mp_11, p_irf_mi_11, ncol=2)
+grid.arrange(p_irf_mp_12, p_irf_mi_12, ncol=2)
+grid.arrange(p_irf_mp_13, p_irf_mi_13, ncol=2)
+grid.arrange(p_irf_mp_14, p_irf_mi_14, ncol=2)
+grid.arrange(p_irf_mp_15, p_irf_mi_15, ncol=2)
+grid.arrange(p_irf_mp_16, p_irf_mi_16, ncol=2)
+grid.arrange(p_irf_mp_17, p_irf_mi_17, ncol=2)
+grid.arrange(p_irf_mp_18, p_irf_mi_18, ncol=2)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+

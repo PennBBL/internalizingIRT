@@ -41,6 +41,30 @@ df$Remove <- NULL
 
 ### a) Monotonicity
 # i. Check that proportion of "yes" responses monotonically increase with trait score estimated using 2PL IRT model for each item for probands.
+first_proband_mod <- irt.fa(df[df$informant == "proband", grep("ITEM", colnames(df), value=TRUE)], nfactors=1, plot=FALSE)
+df[df$informant == "proband", "FirstTraitEstimate"] <- score.irt(first_proband_mod)
+
+items <- grep("ITEM", colnames(df), value=TRUE)
+summary_df <- data.frame(matrix(NA, nrow=21, ncol=length(items)+1)
+colnames(summary_df) <- c("LessThan", items)
+splits <- seq(0, 5, .25)
+summary_df$LessThan <- splits
+
+prevspl <- -5
+for (item in items) {
+	prevspl <- -5
+	for (spl in splits) {
+		tmp_df <- df[df$informant == "proband" & df$FirstTraitEstimate < spl & df$FirstTraitEstimate > prevspl,]
+		summary_df[summary_df$LessThan == spl, item] <- nrow(tmp_df[tmp_df[,item] > 0,])/nrow(tmp_df)
+		
+		prevspl <- spl
+	}
+}
+
+for (item in items) {
+	
+	tmp_plot <- ggplot() +
+}
 
 
 # ii. Check that proportion of "yes" responses monotonically increase with trait score estimated using 2PL IRT model for each item for collaterals.
@@ -53,9 +77,11 @@ bifactor_proband <- fa(df[df$informant == "proband", grep("ITEM", colnames(df), 
 # ii. Fit bifactor and unidimensional factor models to collaterals (create table). Then, fit a 2PL IRT model and check that the residuals in the items are not correlated (local independence).
 
 
-##### Hypothesis #2 (DIF): Discrimination parameters will be able to be held constant within items across genders (), but not across informants. Collaterals will require smaller discrimination parameters, due to the guess-work involved in reporting on the proband’s internalizing symptoms. In addition, discrimination parameters based on collateral reports will vary systematically by the gender of the proband such that discrimination parameters will be higher for collaterals of female than male adolescents. 
 
-##### Hypothesis #3 (DIF): Given a trait level, male probands and their collaterals will endorse “grouchy/irritable” more frequently and female probands and their collaterals will endorse “crying” more frequently(), but that these differences will be minimal enough to justify putting males and females on the same scale. 
+##### Hypothesis #2 (DIF): Given a trait level, male probands and their collaterals will endorse “grouchy/irritable” more frequently and female probands and their collaterals will endorse “crying” more frequently (), but that these differences will be minimal enough to justify putting males and females on the same scale. 
+
+##### Hypothesis #3 (DIF): Discrimination parameters will be able to be held constant within items and across genders for probands (), but only within items for collaterals. Discrimination parameters based on collateral reports will vary systematically by the gender of the proband such that discrimination parameters will be higher for collaterals of female than male adolescents. Collaterals will require smaller discrimination parameters than probands due to the guess-work involved in reporting on the proband’s internalizing symptoms.
+
 
 ### c) Identify items with linear and non-linear DIF using lordif package
 # i. Identify items with DIF in probands. 
@@ -77,7 +103,7 @@ bifactor_proband <- fa(df[df$informant == "proband", grep("ITEM", colnames(df), 
 
 
 
-##### Hypothesis #4: There will be evidence for construct validity with convergent and discriminant validity, such that higher levels of lifetime internalizing psychopathology severity will be associated will greater probability of endorsing suicidal ideation and a history of physical or sexual assault, and there will be no association between lifetime internalizing psychopathology severity and finger tapping speed within sex.
+##### Hypothesis #4: There will be convergent and discriminant evidence for construct validity, such that higher levels of lifetime internalizing psychopathology severity will be associated will greater probability of endorsing suicidal ideation and a history of physical or sexual assault, and there will be no association between lifetime internalizing psychopathology severity and finger tapping speed within sex.
 
 
 ##### Hypothesis #5: Females’ lifetime internalizing psychopathology will be worse, as reported by the proband and the collateral, than males’ ().

@@ -41,11 +41,12 @@ df$Remove <- NULL
 
 ### a) Monotonicity
 # i. Check that proportion of "yes" responses monotonically increase with trait score estimated using 2PL IRT model for each item for probands.
-first_proband_mod <- irt.fa(df[df$informant == "proband", grep("ITEM", colnames(df), value=TRUE)], nfactors=1, plot=FALSE)
-df[df$informant == "proband", "FirstTraitEstimate"] <- score.irt(first_proband_mod)
 
-items <- grep("ITEM", colnames(df), value=TRUE)
-summary_df <- data.frame(matrix(NA, nrow=21, ncol=length(items)+1)
+first_proband_mod <- irt.fa(df[df$informant == "proband", grep("ITEM", colnames(df), value=TRUE)], nfactors=1, plot=FALSE)
+#first_proband_mod <- irt.fa(df[df$informant == "proband", c("ITEM001", "ITEM002", "ITEM003", "ITEM004", "ITEM005")], nfactors=1, plot=FALSE)
+df[df$informant == "proband", "FirstTraitEstimate"] <- scoreIrt(first_proband_mod, df[df$informant == "proband", c("ITEM001", "ITEM002", "ITEM003", "ITEM004", "ITEM005")])$theta1
+
+summary_df <- data.frame(matrix(NA, nrow=21, ncol=length(items)+1))
 colnames(summary_df) <- c("LessThan", items)
 splits <- seq(0, 5, .25)
 summary_df$LessThan <- splits
@@ -55,7 +56,9 @@ for (item in items) {
 	prevspl <- -5
 	for (spl in splits) {
 		tmp_df <- df[df$informant == "proband" & df$FirstTraitEstimate < spl & df$FirstTraitEstimate > prevspl,]
-		summary_df[summary_df$LessThan == spl, item] <- nrow(tmp_df[tmp_df[,item] > 0,])/nrow(tmp_df)
+		if (nrow(tmp_df) == 0) { summary_df[summary_df$LessThan == spl, item] <- 0 
+		} else { summary_df[summary_df$LessThan == spl, item] <- nrow(tmp_df[tmp_df[,item] > 0,])/nrow(tmp_df)
+		}
 		
 		prevspl <- spl
 	}

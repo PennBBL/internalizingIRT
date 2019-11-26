@@ -34,6 +34,7 @@ rownames(proband_df) <- 1:nrow(proband_df)
 # Age
 proband_df$ageAtClinicalAssess1 <- proband_df$ageAtClinicalAssess1/12
 mean(proband_df$ageAtClinicalAssess1)
+sd(proband_df$ageAtClinicalAssess1)
 
 # % Female
 nrow(proband_df[proband_df$sex == "Female",])/nrow(proband_df)

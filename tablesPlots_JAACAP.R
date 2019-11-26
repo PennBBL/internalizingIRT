@@ -1,7 +1,7 @@
-### Script to produce csvs for tables and graphs
+### Script to produce csvs for tables and graphs (Modified for JAACAP)
 ###
 ### Ellyn Butler
-### August 15, 2019 - September 1, 2019
+### August 15, 2019 - November 26, 2019
 
 
 # Load packages
@@ -38,7 +38,7 @@ coll_eigen_plot <- ggplot(ceigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
 	ggtitle("Collateral Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure1/figure1.pdf", width=14, height=6)
+pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure1.pdf", width=14, height=6)
 grid.arrange(pro_eigen_plot, coll_eigen_plot, ncol=2)
 dev.off()
 
@@ -622,7 +622,7 @@ corr_plot <- ggplot(comb_df, aes(x=internal_bifactor_P, y=internal_bifactor_C, f
 	labs(title="Internalizing Severity", subtitle=subtit, x="Proband-Reported", y="Collateral-Reported", fill="Gender", color="Gender") + geom_abline(slope=1, intercept=0, linetype="dashed") +
 	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=12), legend.title = element_text(size=15), legend.text = element_text(size=12), axis.text.x= element_text(angle=45)) 
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure3/figure3.pdf", width=7, height=6)
+pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure2.pdf", width=7, height=6)
 corr_plot
 dev.off()
 
@@ -660,39 +660,23 @@ collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, fill=sex, 
 	labs(title="Collaterals: Internalizing Severity", x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure2/figure2.pdf", width=14, height=6)
+pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/main_figure1.pdf", width=14, height=6)
 grid.arrange(proband_sex_plot, collateral_sex_plot, ncol=2)
 dev.off()
 
 #### Disagreement trait
 
-# Disagreement greater than 0?
-#diff_int <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/diff_int.csv") 
-#diff_int_table <- data.frame(matrix(NA, nrow=1, ncol=4))
-#colnames(diff_int_table) <- c("T-Value", "Df", "P")
-#diff_int_table[1,] <- c(round(diff_int[1, 2], digits=2), diff_int[1, 3], "< .0001")
-
-#dis_zero_plot <- ggplot(comb_df, aes(x=IntDiff)) + theme_minimal() +
-#	geom_histogram(position="identity", alpha=0.5) + 
-#	labs(title="Difference Between Probands and Collaterals", x="Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") +
-#	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 # Disagreement greater for one sex than another?
 diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/sex_diff_int.csv") 
-#diff_int_sex_table <- data.frame(matrix(NA, nrow=2, ncol=5)) # No longer correct
-#colnames(diff_int_sex_table) <- c("Variable", "Df", "SumSq", "Iter", "P")# No longer correct
-#diff_int_sex_table$Variable <- c("Gender", "Residuals")# No longer correct
-#diff_int_sex_table$Df <- round(diff_int_sex$df, digits=2)# No longer correct
-#diff_int_sex_table$SumSq <- round(diff_int_sex$R.Sum.Sq, digits=2)# No longer correct
-#diff_int_sex_table$Iter <- c("5000", "")# No longer correct
-#diff_int_sex_table$P <- c("< .00001", "")# No longer correct
+
 
 diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, fill=sex, color=sex)) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.2) + 
 	labs(title="Difference Between Informants", subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="#F8766D") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="#00BFC4") + geom_vline(xintercept=0) +
 	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top")
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure4/figure4.pdf", width=7, height=6)
+pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/main_figure2.pdf", width=7, height=6)
 diff_sex_plot
 dev.off()
 

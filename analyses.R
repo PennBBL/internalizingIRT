@@ -297,18 +297,7 @@ final_proband_mod <- bfactor(proband_df[,items2], loadings, technical=list(NCYCL
 write.csv(summary(final_proband_mod)[[1]], file="/home/butellyn/parentchild_psychopathology/data/loadings/proband_final_bi.csv", row.names=FALSE)
 
 s <- "F1 = ITEM001, ITEM002_F, ITEM002_M, ITEM003, ITEM004, ITEM005, ITEM006, ITEM007, ITEM008, ITEM009, ITEM010, ITEM011, ITEM012, ITEM013, ITEM014, ITEM015, ITEM016, ITEM017, ITEM018, ITEM019, ITEM020, ITEM021, ITEM022, ITEM023, ITEM024, ITEM025, ITEM026, ITEM027, ITEM028, ITEM029, ITEM030, ITEM031, ITEM032, ITEM033, ITEM034, ITEM035"
-one_proband_mod <- mirt(proband_df[,items2], s, method="MHRM", optimizer="NR", technical=list(NCYCLES=3000)) #MHRM brings it down... tried SANN (doesn't work with stochastic method), NR doesn't converge within 3000 iterations, still very high with NR1, L-BFGS-B brings it down SUBSTANTIALLY
-
-
-
-
-
-
-
-
-
-
-
+one_proband_mod <- mirt(proband_df[,items2], s, method="MHRM", technical=list(NCYCLES=3000)) #MHRM brings it down... tried SANN (doesn't work with stochastic method), NR doesn't converge within 3000 iterations, still very high with NR1, L-BFGS-B brings it down SUBSTANTIALLY
 
 
 write.csv(summary(one_proband_mod)$rotF, file="/home/butellyn/parentchild_psychopathology/data/loadings/proband_one.csv", row.names=FALSE)

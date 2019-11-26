@@ -680,14 +680,6 @@ pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/main_figure2.p
 diff_sex_plot
 dev.off()
 
-#pdf(file="/home/butellyn/parentchild_psychopathology/plots/internalizing_sex.pdf", width=10, height=6)
-#grid.arrange(proband_sex_plot, tableGrob(proband_int_sex_table), ncol=2)
-#grid.arrange(collateral_sex_plot, tableGrob(collateral_int_sex_table), ncol=2)
-#grid.arrange(dis_zero_plot, tableGrob(diff_int_table), ncol=2)
-#grid.arrange(dis_sex_zero_plot, tableGrob(diff_int_sex_table), ncol=2)
-#dev.off()
-
-
 
 
 

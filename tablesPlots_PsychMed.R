@@ -1,4 +1,4 @@
-### Script to produce csvs for tables and graphs (Modified for JAACAP)
+### Script to produce csvs for tables and graphs (Modified for Psychological Medicine)
 ###
 ### Ellyn Butler
 ### August 15, 2019 - December 16, 2019
@@ -39,7 +39,7 @@ coll_eigen_plot <- ggplot(ceigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
 	ggtitle("Collateral Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure1.pdf", width=14, height=6)
+png(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure1.png", width=14, height=6)
 grid.arrange(pro_eigen_plot, coll_eigen_plot, ncol=2)
 dev.off()
 
@@ -639,11 +639,13 @@ proband_int_sex_table$Iter <- c("5000", "")
 proband_int_sex_table$P <- c("< .00001", "")
 rownames(proband_int_sex_table) <- NULL
 
-proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, fill=sex, color=sex)) + theme_minimal() +
-	theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="plum2") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="steelblue4") +
-	geom_histogram(position="identity", alpha=0.2) + annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("plum2", "steelblue4")) + scale_fill_manual(values=c("plum1", "steelblue3")) +
-	labs(title="Probands: Internalizing Severity", x="Internalizing Severity", y="# of Probands", fill="Gender", color="Gender") +
+subtit=paste0("Gender SS: ", proband_int_sex_table[1,"SS"], ", Resid SS: ", proband_int_sex_table[2,"SS"], ", p<.00001")
+proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
+	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") + 
+	theme(legend.position="top") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
+	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) +
+	labs(title="Probands: Internalizing Severity", subtitle=subtit, x="Internalizing Severity", y="# of Probands", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
 
@@ -657,14 +659,17 @@ collateral_int_sex_table$SS <- round(collateral_int_mod$R.Sum.Sq, digits=2)
 collateral_int_sex_table$Iter <- c("5000", "")
 collateral_int_sex_table$P <- c("< .00001", "")
 
-collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, fill=sex, color=sex)) + theme_minimal() +
-	theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="plum2") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="steelblue4") +
-	geom_histogram(position="identity", alpha=0.2) + annotation_custom(tableGrob(collateral_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("plum2", "steelblue4")) + scale_fill_manual(values=c("plum1", "steelblue3")) +
-	labs(title="Collaterals: Internalizing Severity", x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
+subtit=paste0("Gender SS: ", collateral_int_sex_table[1,"SS"], ", Resid SS: ", collateral_int_sex_table[2,"SS"], ", p<.00001")
+collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
+	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), 
+	theme(legend.position="top") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
+	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) +
+	labs(title="Collaterals: Internalizing Severity", subtitle=subtit, x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/main_figure1.pdf", width=14, height=6)
+
+png(file="/home/butellyn/parentchild_psychopathology/plots/PsychMed/main_figure1.png", width=6, height=3, units='in', res=300)
 grid.arrange(proband_sex_plot, collateral_sex_plot, ncol=2)
 dev.off()
 
@@ -675,13 +680,13 @@ dev.off()
 diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/sex_diff_int.csv") 
 
 
-diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, fill=sex, color=sex)) + theme_minimal() +
-	geom_histogram(position="identity", alpha=0.2) + 
-	labs(title="Difference Between Informants", subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="plum2") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="steelblue4") + geom_vline(xintercept=0) +
-	scale_color_manual(values=c("plum2", "steelblue4")) + scale_fill_manual(values=c("plum1", "steelblue3")) +
-	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top")
+diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, color=sex)) + theme_minimal(base_size=8) +
+	geom_histogram(position="dodge", alpha=0.2) + 
+	labs(title="Difference Between Informants", subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="black") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="gray") + geom_vline(xintercept=0) +
+	scale_color_manual(values=c("black", "gray"))
+	#theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top")
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/main_figure2.pdf", width=7, height=6)
+png(file="/home/butellyn/parentchild_psychopathology/plots/PsychMed/main_figure2.png", width=3.3, height=2, units='in', res=300)
 diff_sex_plot
 dev.off()
 

@@ -1,7 +1,7 @@
 ### Script to produce csvs for tables and graphs (Modified for Psychological Medicine)
 ###
 ### Ellyn Butler
-### August 15, 2019 - December 16, 2019
+### August 15, 2019 - January 2, 2020
 
 set.seed(20)
 
@@ -644,8 +644,8 @@ proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, color=sex)) + th
 	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") + 
 	theme(legend.position="top") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
 	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) +
-	labs(title="Probands: Internalizing Severity", subtitle=subtit, x="Internalizing Severity", y="# of Probands", fill="Gender", color="Gender") +
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Probands: Internalizing Severity",
+	labs(subtitle=subtit, x="Internalizing Severity", y="# of Probands", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
 
@@ -664,13 +664,13 @@ collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, color=sex)
 	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), 
 	theme(legend.position="top") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
 	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) +
-	labs(title="Collaterals: Internalizing Severity", subtitle=subtit, x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Collaterals: Internalizing Severity", 
+	labs(subtitle=subtit, x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
 
-png(file="/home/butellyn/parentchild_psychopathology/plots/PsychMed/main_figure1.png", width=6, height=3, units='in', res=300)
-grid.arrange(proband_sex_plot, collateral_sex_plot, ncol=2)
+png(file="/home/butellyn/parentchild_psychopathology/plots/JACP/main_figure1.png", width=84, height=140, units='mm', res=300)
+grid.arrange(proband_sex_plot, collateral_sex_plot, nrow=2)
 dev.off()
 
 #### Disagreement trait
@@ -681,12 +681,12 @@ diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/s
 
 
 diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, color=sex)) + theme_minimal(base_size=8) +
-	geom_histogram(position="dodge", alpha=0.2) + 
-	labs(title="Difference Between Informants", subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="black") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="gray") + geom_vline(xintercept=0) +
-	scale_color_manual(values=c("black", "gray"))
+	geom_histogram(position="dodge", alpha=0.2) + #labs(title="Difference Between Informants")
+	labs(subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Difference on Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="black") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="gray") + geom_vline(xintercept=0) +
+	scale_color_manual(values=c("black", "gray")) + theme(legend.position="top")
 	#theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top")
 
-png(file="/home/butellyn/parentchild_psychopathology/plots/PsychMed/main_figure2.png", width=3.3, height=2, units='in', res=300)
+png(file="/home/butellyn/parentchild_psychopathology/plots/JACP/main_figure2.png", width=84, height=84, units='mm', res=300) #height used to be 2
 diff_sex_plot
 dev.off()
 

@@ -10,7 +10,7 @@ library('ggplot2')
 library('gridExtra')
 library('mirt')
 library('psych')
-library('car') 
+library('car')
 library('lmPerm')
 library('msm')
 library('DAAG')
@@ -68,16 +68,16 @@ for (item in items) {
 	prevspl <- -5
 	for (spl in splits) {
 		tmp_df <- proband_df[proband_df$FirstTraitEstimate < spl & proband_df$FirstTraitEstimate > prevspl,]
-		if (nrow(tmp_df) == 0) { summary_proband_df[summary_proband_df$LessThan == spl, item] <- 0 
+		if (nrow(tmp_df) == 0) { summary_proband_df[summary_proband_df$LessThan == spl, item] <- 0
 		} else { summary_proband_df[summary_proband_df$LessThan == spl, item] <- round(nrow(tmp_df[tmp_df[,item] > 0,])/nrow(tmp_df), digits=3)*100
 		}
-		
+
 		prevspl <- spl
 	}
 }
 
 for (item in items) {
-	tmp_plot <- ggplot(summary_proband_df, aes_string(x="LessThan", y=item)) + 
+	tmp_plot <- ggplot(summary_proband_df, aes_string(x="LessThan", y=item)) +
 		geom_bar(stat="identity") + theme_minimal() + xlab("Trait Estimate Bin") +
 		ylab("Yes (%)") + ggtitle(paste0("Probands: ", item)) + scale_y_continuous(limits=c(0,100)) +
 		theme(title = element_text(size=20))
@@ -99,16 +99,16 @@ for (item in items) {
 	prevspl <- -5
 	for (spl in splits) {
 		tmp_df <- collateral_df[collateral_df$FirstTraitEstimate < spl & collateral_df$FirstTraitEstimate > prevspl,]
-		if (nrow(tmp_df) == 0) { summary_collateral_df[summary_collateral_df$LessThan == spl, item] <- 0 
+		if (nrow(tmp_df) == 0) { summary_collateral_df[summary_collateral_df$LessThan == spl, item] <- 0
 		} else { summary_collateral_df[summary_collateral_df$LessThan == spl, item] <- round(nrow(tmp_df[tmp_df[,item] > 0,])/nrow(tmp_df), digits=3)*100
 		}
-		
+
 		prevspl <- spl
 	}
 }
 
 for (item in items) {
-	tmp_plot <- ggplot(summary_collateral_df, aes_string(x="LessThan", y=item)) + 
+	tmp_plot <- ggplot(summary_collateral_df, aes_string(x="LessThan", y=item)) +
 		geom_bar(stat="identity") + theme_minimal() + xlab("Trait Estimate Bin") +
 		ylab("Yes (%)") + ggtitle(paste0("Collaterals: ", item)) + scale_y_continuous(limits=c(0,100)) +
 		theme(title = element_text(size=20))
@@ -159,17 +159,17 @@ dev.off()
 
 ##### Hypothesis #2 (DIF): Given a trait level, female probands and their collaterals will endorse “crying” more frequently than male probands and their collaterals (Gelin, 2003; Carleton, 2013; van Beek, 2012).
 
-##### Hypothesis #3 (DIF): DIF effects will be larger in probands than collaterals due to the guess-work involved in reporting on the proband’s internalizing symptoms and the subsequent increased error variance. 
+##### Hypothesis #3 (DIF): DIF effects will be larger in probands than collaterals due to the guess-work involved in reporting on the proband’s internalizing symptoms and the subsequent increased error variance.
 
 
 ### c) Identify items with linear and non-linear DIF using mirt package
-# i. _________________ Check for all DIF in probands. _________________ 
+# i. _________________ Check for all DIF in probands. _________________
 loadings <- c(rep(1, 13), rep(2, 15), rep(3, 7)) # Correspond to screener DEP, other DEP, GAD and SOC items ####
 
 # DRF https://groups.google.com/forum/#!topic/mirt-package/WVc6nM-76LM
 # https://groups.google.com/forum/#!searchin/mirt-package/bifactor$20correlated%7Csort:date/mirt-package/tRP13GRlQhI/mUi3H_rIBgAJ
-proband_results <- data.frame(matrix(NA, nrow=35, ncol=6)) 
-colnames(proband_results) <- c("Item", "Main", "Interaction", "DiffAIC", "ChiSq", "ChiSqP") 
+proband_results <- data.frame(matrix(NA, nrow=35, ncol=6))
+colnames(proband_results) <- c("Item", "Main", "Interaction", "DiffAIC", "ChiSq", "ChiSqP")
 #fun <- function(Theta, ...) msm::dtnorm(Theta, mean = 0, sd = 1, lower = -2, upper = 5)
 #scores <- fscores(tmp_proband_mod, custom_den = fun, method = 'MAP', full.scores = FALSE)
 i=1
@@ -180,17 +180,17 @@ for (item in items) {
 
 	# Fit bifactor without this item
 	tmp_proband_mod <- bfactor(proband_df[,items[!(items %in% item)]], loadings[-item_ind], technical=list(NCYCLES=2000))
-	write.csv(summary(tmp_proband_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/proband_bi_", item, "_ex.csv"), row.names=FALSE) ####	
+	write.csv(summary(tmp_proband_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/proband_bi_", item, "_ex.csv"), row.names=FALSE) ####
 
 	assign(paste0(item, "_proband_bifactor"), tmp_proband_mod)
 	# Score probands using this model
-	scores <- fscores(tmp_proband_mod, QMC=TRUE) ### Q: defaults okay?
-	proband_df[,paste0("general_", item, "_ex")] <- scores[,1] 
+	scores <- fscores(tmp_proband_mod, QMC=TRUE) 
+	proband_df[,paste0("general_", item, "_ex")] <- scores[,1]
 	proband_df[,paste0("dep_", item, "_ex")] <- scores[,2] ####
 	proband_df[,paste0("gad_", item, "_ex")] <- scores[,3] ####
 	proband_df[,paste0("soc_", item, "_ex")] <- scores[,4] ####
 
-	# Dichotomize item, if necessary 
+	# Dichotomize item, if necessary
 	if (length(unique(proband_df[,item])) > 2) {
 		proband_df[proband_df[,item] == 0, paste0(item, "_dich")] <- 0
 		proband_df[proband_df[,item] != 0, paste0(item, "_dich")] <- 1
@@ -209,7 +209,7 @@ for (item in items) {
 		assign(paste0(item, "_simp_mod"), tmp_simp_log_mod)
 	}
 
-	# Run a ChiSq Test 
+	# Run a ChiSq Test
 	chisq <- anova(tmp_simp_log_mod, tmp_log_mod, test="Chisq")
 
 	# Put relevant statistics in results dataframe
@@ -217,8 +217,8 @@ for (item in items) {
 	proband_results[i, "Main"] <- summary(tmp_log_mod)$coefficients[3,4]
 	proband_results[i, "Interaction"] <- summary(tmp_log_mod)$coefficients[4,4]
 	proband_results[i, "DiffAIC"] <- summary(tmp_log_mod)$aic - summary(tmp_simp_log_mod)$aic
-	proband_results[i, "ChiSq"] <- chisq$Deviance[2] 
-	proband_results[i, "ChiSqP"] <- chisq[[5]][2] 
+	proband_results[i, "ChiSq"] <- chisq$Deviance[2]
+	proband_results[i, "ChiSqP"] <- chisq[[5]][2]
 
 	i=i+1
 }
@@ -246,17 +246,17 @@ for (item in items2) {
 
 		# Fit bifactor without this item
 		tmp_proband_mod <- bfactor(proband_df[,items2[!(items2 %in% item)]], loadings[-item_ind], technical=list(NCYCLES=2000))
-		write.csv(summary(tmp_proband_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/proband_bi_", item, "_ex2.csv"), row.names=FALSE) 
+		write.csv(summary(tmp_proband_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/proband_bi_", item, "_ex2.csv"), row.names=FALSE)
 
 		assign(paste0(item, "_proband_bifactor2"), tmp_proband_mod)
 		# Score probands using this model
-		scores <- fscores(tmp_proband_mod, QMC=TRUE) ### Q: defaults okay?
-		proband_df[,paste0("general_", item, "_ex2")] <- scores[,1] 
+		scores <- fscores(tmp_proband_mod, QMC=TRUE)
+		proband_df[,paste0("general_", item, "_ex2")] <- scores[,1]
 		proband_df[,paste0("dep_", item, "_ex2")] <- scores[,2] ####
 		proband_df[,paste0("gad_", item, "_ex2")] <- scores[,3] ####
 		proband_df[,paste0("soc_", item, "_ex2")] <- scores[,4] ####
 
-		# Dichotomize item, if necessary 
+		# Dichotomize item, if necessary
 		if (length(unique(proband_df[,item])) > 2) {
 			# Test for DIF in item
 			tmp_log_mod <- glm(proband_df[,paste0(item, "_dich")] ~ proband_df[,paste0("general_", item, "_ex2")] + proband_df$sex + proband_df[,paste0("general_", item, "_ex2")]*proband_df$sex, family="binomial")
@@ -273,7 +273,7 @@ for (item in items2) {
 			assign(paste0(item, "_simp_mod2"), tmp_simp_log_mod)
 		}
 
-		# Run a ChiSq Test 
+		# Run a ChiSq Test
 		chisq <- anova(tmp_simp_log_mod, tmp_log_mod, test="Chisq")
 
 		# Put relevant statistics in results dataframe
@@ -303,18 +303,18 @@ one_proband_mod <- mirt(proband_df[,items2], s, method="MHRM", technical=list(NC
 write.csv(summary(one_proband_mod)$rotF, file="/home/butellyn/parentchild_psychopathology/data/loadings/proband_one.csv", row.names=FALSE)
 
 # Score probands using this model
-scores <- fscores(final_proband_mod, QMC=TRUE) ### Q: defaults okay?
-proband_df$internal_bifactor <- scores[,1] 
-proband_df$depress_bifactor <- scores[,2] 
-proband_df$genanx_bifactor <- scores[,3] 
-proband_df$socanx_bifactor <- scores[,4] 
+scores <- fscores(final_proband_mod, QMC=TRUE)
+proband_df$internal_bifactor <- scores[,1]
+proband_df$depress_bifactor <- scores[,2]
+proband_df$genanx_bifactor <- scores[,3]
+proband_df$socanx_bifactor <- scores[,4]
 
 
 # Write out the parameters for each model, the results table(s), and proband_df with the final general and specific trait estimates
 write.csv(proband_df, file=paste0("/home/butellyn/parentchild_psychopathology/data/proband_", Sys.Date(), ".csv"), row.names=FALSE)
 
-# ii. _________________ Check for all DIF in collaterals. _________________ 
-loadings <- c(rep(1, 13), rep(2, 15), rep(3, 7)) 
+# ii. _________________ Check for all DIF in collaterals. _________________
+loadings <- c(rep(1, 13), rep(2, 15), rep(3, 7))
 collateral_results <- data.frame(matrix(NA, nrow=35, ncol=6))
 colnames(collateral_results) <- c("Item", "Main", "Interaction", "DiffAIC", "ChiSq", "ChiSqP")
 i=1
@@ -324,17 +324,17 @@ for (item in items) {
 
 	# Fit bifactor without this item
 	tmp_collateral_mod <- bfactor(collateral_df[,items[!(items %in% item)]], loadings[-item_ind], technical=list(NCYCLES=2000))
-	write.csv(summary(tmp_collateral_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/collateral_bi_", item, "_ex.csv"), row.names=FALSE)	
+	write.csv(summary(tmp_collateral_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/collateral_bi_", item, "_ex.csv"), row.names=FALSE)
 
 	assign(paste0(item, "_collateral_bifactor"), tmp_collateral_mod)
 	# Score collaterals using this model
-	scores <- fscores(tmp_collateral_mod, QMC=TRUE) ### Q: defaults okay?
-	collateral_df[,paste0("general_", item, "_ex")] <- scores[,1] 
+	scores <- fscores(tmp_collateral_mod, QMC=TRUE)
+	collateral_df[,paste0("general_", item, "_ex")] <- scores[,1]
 	collateral_df[,paste0("dep_", item, "_ex")] <- scores[,2]
-	collateral_df[,paste0("gad_", item, "_ex")] <- scores[,3] 
+	collateral_df[,paste0("gad_", item, "_ex")] <- scores[,3]
 	collateral_df[,paste0("soc_", item, "_ex")] <- scores[,4]
 
-	# Dichotomize item, if necessary 
+	# Dichotomize item, if necessary
 	if (length(unique(collateral_df[,item])) > 2) {
 		collateral_df[collateral_df[,item] == 0, paste0(item, "_dich")] <- 0
 		collateral_df[collateral_df[,item] != 0, paste0(item, "_dich")] <- 1
@@ -353,7 +353,7 @@ for (item in items) {
 		assign(paste0(item, "_simp_mod"), tmp_simp_log_mod)
 	}
 
-	# Run a ChiSq Test 
+	# Run a ChiSq Test
 	chisq <- anova(tmp_simp_log_mod, tmp_log_mod, test="Chisq")
 
 	# Put relevant statistics in results dataframe
@@ -361,8 +361,8 @@ for (item in items) {
 	collateral_results[i, "Main"] <- summary(tmp_log_mod)$coefficients[3,4]
 	collateral_results[i, "Interaction"] <- summary(tmp_log_mod)$coefficients[4,4]
 	collateral_results[i, "DiffAIC"] <- summary(tmp_log_mod)$aic - summary(tmp_simp_log_mod)$aic
-	collateral_results[i, "ChiSq"] <- chisq$Deviance[2] 
-	collateral_results[i, "ChiSqP"] <- chisq[[5]][2] 
+	collateral_results[i, "ChiSq"] <- chisq$Deviance[2]
+	collateral_results[i, "ChiSqP"] <- chisq[[5]][2]
 
 	i=i+1
 }
@@ -390,17 +390,17 @@ for (item in items2) {
 
 		# Fit bifactor without this item
 		tmp_collateral_mod <- bfactor(collateral_df[,items2[!(items2 %in% item)]], loadings[-item_ind], technical=list(NCYCLES=2000))
-		write.csv(summary(tmp_collateral_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/collateral_bi_", item, "_ex2.csv"), row.names=FALSE)	
+		write.csv(summary(tmp_collateral_mod)[[1]], file=paste0("/home/butellyn/parentchild_psychopathology/data/loadings/collateral_bi_", item, "_ex2.csv"), row.names=FALSE)
 
 		assign(paste0(item, "_collateral_bifactor2"), tmp_collateral_mod)
 		# Score collaterals using this model
-		scores <- fscores(tmp_collateral_mod, QMC=TRUE) ### Q: defaults okay?
-		collateral_df[,paste0("general_", item, "_ex2")] <- scores[,1] 
-		collateral_df[,paste0("dep_", item, "_ex2")] <- scores[,2] 
-		collateral_df[,paste0("gad_", item, "_ex2")] <- scores[,3] 
+		scores <- fscores(tmp_collateral_mod, QMC=TRUE)
+		collateral_df[,paste0("general_", item, "_ex2")] <- scores[,1]
+		collateral_df[,paste0("dep_", item, "_ex2")] <- scores[,2]
+		collateral_df[,paste0("gad_", item, "_ex2")] <- scores[,3]
 		collateral_df[,paste0("soc_", item, "_ex2")] <- scores[,4]
 
-		# Dichotomize item, if necessary 
+		# Dichotomize item, if necessary
 		if (length(unique(collateral_df[,item])) > 2) {
 			# Test for DIF in item
 			tmp_log_mod <- glm(collateral_df[,paste0(item, "_dich")] ~ collateral_df[,paste0("general_", item, "_ex2")] + collateral_df$sex + collateral_df[,paste0("general_", item, "_ex2")]*collateral_df$sex, family="binomial")
@@ -417,7 +417,7 @@ for (item in items2) {
 			assign(paste0(item, "_simp_mod2"), tmp_simp_log_mod)
 		}
 
-		# Run a ChiSq Test 
+		# Run a ChiSq Test
 		chisq <- anova(tmp_simp_log_mod, tmp_log_mod, test="Chisq")
 
 		# Put relevant statistics in results dataframe
@@ -425,8 +425,8 @@ for (item in items2) {
 		collateral_results2[i, "Main"] <- summary(tmp_log_mod)$coefficients[3,4]
 		collateral_results2[i, "Interaction"] <- summary(tmp_log_mod)$coefficients[4,4]
 		collateral_results2[i, "DiffAIC"] <- summary(tmp_log_mod)$aic - summary(tmp_simp_log_mod)$aic
-		collateral_results2[i, "ChiSq"] <- chisq$Deviance[2] 
-		collateral_results2[i, "ChiSqP"] <- chisq[[5]][2] 
+		collateral_results2[i, "ChiSq"] <- chisq$Deviance[2]
+		collateral_results2[i, "ChiSqP"] <- chisq[[5]][2]
 
 		i=i+1
 	}
@@ -436,7 +436,7 @@ write.csv(collateral_results2, file=paste0("/home/butellyn/parentchild_psychopat
 
 
 # If there are no DiffAIC outliers, then re-calcualte the bifactor model and scores (internalizing, depression, generalized, social)
-final_collateral_mod <- bfactor(collateral_df[,items2], loadings, technical=list(NCYCLES=2000)) 
+final_collateral_mod <- bfactor(collateral_df[,items2], loadings, technical=list(NCYCLES=2000))
 write.csv(summary(final_collateral_mod)[[1]], file="/home/butellyn/parentchild_psychopathology/data/loadings/collateral_final_bi.csv", row.names=FALSE)
 
 s <- "F1 = ITEM001, ITEM002_F, ITEM002_M, ITEM003, ITEM004, ITEM005, ITEM006, ITEM007, ITEM008, ITEM009, ITEM010, ITEM011, ITEM012, ITEM013, ITEM014, ITEM015, ITEM016, ITEM017, ITEM018, ITEM019, ITEM020, ITEM021, ITEM022, ITEM023, ITEM024, ITEM025, ITEM026, ITEM027, ITEM028, ITEM029, ITEM030, ITEM031, ITEM032, ITEM033, ITEM034, ITEM035"
@@ -444,15 +444,15 @@ one_collateral_mod <- mirt(collateral_df[,items2], s, method="MHRM", technical=l
 write.csv(summary(one_collateral_mod)$rotF, file="/home/butellyn/parentchild_psychopathology/data/loadings/collateral_one.csv", row.names=FALSE)
 
 # Score collaterals using this model
-scores <- fscores(final_collateral_mod, QMC=TRUE) 
-collateral_df$internal_bifactor_coll <- scores[,1] 
-collateral_df$depress_bifactor_coll <- scores[,2] 
+scores <- fscores(final_collateral_mod, QMC=TRUE)
+collateral_df$internal_bifactor_coll <- scores[,1]
+collateral_df$depress_bifactor_coll <- scores[,2]
 collateral_df$genanx_bifactor_coll <- scores[,3]
 collateral_df$socanx_bifactor_coll <- scores[,4]
 
 # Score collaterals using proband-derived parameters
 scores2 <- fscores(final_proband_mod, response.pattern=collateral_df[,items2], QMC=TRUE)
-collateral_df$internal_bifactor <- scores2[,37] 
+collateral_df$internal_bifactor <- scores2[,37]
 collateral_df$depress_bifactor <- scores2[,38]
 collateral_df$genanx_bifactor <- scores2[,39]
 collateral_df$socanx_bifactor <- scores2[,40]
@@ -478,7 +478,7 @@ collateral_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/colla
 ##### Hypothesis #4: There will be convergent and discriminant evidence for construct validity, such that higher levels of lifetime proband- and collateral-reported internalizing psychopathology severity will be associated will greater probability of endorsing lifetime suicidal ideation, physical assault, and sexual assault, and there will be no association between lifetime internalizing psychopathology severity and finger tapping speed, all controlling for sex and age.
 
 # Load the data
-item_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/GOA_itemwise_for_reporter_agreement.csv") 
+item_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/GOA_itemwise_for_reporter_agreement.csv")
 item_df <- item_df[,c("PROBAND_BBLID", "INTERVIEW_TYPE", "PTD003", "PTD004", "SUI002")]
 colnames(item_df) <- c("bblid", "informant", "PTD003", "PTD004", "SUI002")
 item_df$informant <- as.character(item_df$informant)
@@ -548,7 +548,7 @@ write.csv(summary(collateral_speed_mod)$coefficients, file="/home/butellyn/paren
 
 
 ##### Hypothesis #5: Females’ lifetime internalizing psychopathology will be worse, as reported by the proband and the collateral, than males’ (Kessler, 1993).
-# i. Test the following hypothesis: Females will suffer from greater lifetime internalizing psychopathology than males, as reported by probands 
+# i. Test the following hypothesis: Females will suffer from greater lifetime internalizing psychopathology than males, as reported by probands
 	# (Check distributions: Normal? Outliers? Homogeneous? Equal variances (if not, permutation test)?)
 proband_internalizing <- aovp(proband_df$internal_bifactor ~ factor(proband_df$sex))
 
@@ -589,7 +589,7 @@ male_int_df[1,] <- c("Male", male_int_corr$estimate[[1]], male_int_corr$paramete
 write.csv(male_int_df, file="/home/butellyn/parentchild_psychopathology/data/mods/male_int_corr.csv")
 
 
-diff_int <- t.test(comb_df$IntDiff, mu=0) #### Not normal.... 
+diff_int <- t.test(comb_df$IntDiff, mu=0) #### Not normal....
 diff_int_df <- data.frame(matrix(NA, nrow=1, ncol=6))
 colnames(diff_int_df) <- c("Sex", "Mean", "T", "df", "LCI", "UCI")
 diff_int_df[1,] <- c("Both", diff_int$estimate[[1]], diff_int$statistic[[1]], diff_int$parameter[[1]], diff_int$conf.int[1], diff_int$conf.int[2])
@@ -748,16 +748,3 @@ grid.arrange(tableGrob(agree_table)) # Figure out how to get rid of rownames in 
 dev.off()
 
 write.csv(agree_table, file="/home/butellyn/parentchild_psychopathology/data/agree_table.csv", row.names=FALSE)
-
-
-
-
-
-
-
-
-
-
-
-
-

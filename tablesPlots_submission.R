@@ -25,7 +25,7 @@ colnames(peigen_df) <- c("compnum", "eigen")
 peigen_df$compnum <- 1:35
 peigen_df$eigen <- proband_eigenvalues
 
-pro_eigen_plot <- ggplot(peigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() + 
+pro_eigen_plot <- ggplot(peigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() +
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
 	ggtitle("Proband Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
@@ -35,7 +35,7 @@ colnames(ceigen_df) <- c("compnum", "eigen")
 ceigen_df$compnum <- 1:35
 ceigen_df$eigen <- collateral_eigenvalues
 
-coll_eigen_plot <- ggplot(ceigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() + 
+coll_eigen_plot <- ggplot(ceigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() +
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
 	ggtitle("Collateral Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
@@ -48,7 +48,7 @@ dev.off()
 # Probands
 # Round #1
 proband_results <- read.csv("/home/butellyn/parentchild_psychopathology/data/proband_dif_withgroups_2019-08-20.csv")
-proband_diffaic_hist <- ggplot(proband_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() + 
+proband_diffaic_hist <- ggplot(proband_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Probands: Differences in AIC (1)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,40), breaks=seq(-130, 40, 10))
 
 proband_results_final <- data.frame(matrix(NA, nrow=nrow(proband_results), ncol=ncol(proband_results)+1)) ###
@@ -100,8 +100,8 @@ write.csv(proband_results_final, "/home/butellyn/parentchild_psychopathology/dat
 
 # Round #2
 proband_results2 <- read.csv("/home/butellyn/parentchild_psychopathology/data/proband_dif2_withgroups_2019-08-20.csv")
-proband_diffaic_hist2 <- ggplot(proband_results2, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() + 
-	ggtitle("Probands: Differences in AIC (2)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10)) 
+proband_diffaic_hist2 <- ggplot(proband_results2, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
+	ggtitle("Probands: Differences in AIC (2)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10))
 
 proband_results2_final <- data.frame(matrix(NA, nrow=nrow(proband_results2), ncol=ncol(proband_results2)+1))
 colnames(proband_results2_final) <- c("Item", "Main-P", "Interaction-P", "AIC", "Chi-Sq", "Chi-Sq-P", "Chi-Sq-P-Bon") ##
@@ -153,7 +153,7 @@ write.csv(proband_results2_final, "/home/butellyn/parentchild_psychopathology/da
 # Collaterals
 # Round #1
 collateral_results <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_dif_withgroups_2019-08-20.csv")
-collateral_diffaic_hist <- ggplot(collateral_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() + 
+collateral_diffaic_hist <- ggplot(collateral_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Collaterals: Differences in AIC (1)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20))#+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10))
 
 collateral_results_final <- data.frame(matrix(NA, nrow=nrow(collateral_results), ncol=ncol(collateral_results)+1))
@@ -204,8 +204,8 @@ collateral_results_final <- collateral_results_final[,c("Item", "AIC", "Chi-Sq",
 write.csv(collateral_results_final, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_dif_withgroups.csv", row.names=FALSE)
 
 # Round #2
-collateral_results2 <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_dif2_2019-08-14.csv")
-collateral_diffaic_hist2 <- ggplot(collateral_results2, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() + 
+collateral_results2 <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_dif2_2019-08-20.csv")
+collateral_diffaic_hist2 <- ggplot(collateral_results2, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Collaterals: Differences in AIC (2)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10))
 
 collateral_results2_final <- data.frame(matrix(NA, nrow=nrow(collateral_results2), ncol=ncol(collateral_results2)+1))
@@ -352,7 +352,7 @@ comb_df$SUI002 <- factor(comb_df$SUI002)
 proband_sui_plot <- ggplot(comb_df[!is.na(comb_df$SUI002),], aes_string(x="internal_bifactor_P", fill="SUI002", color="SUI002")) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.5) + labs(fill = "Suicidal Ideation", color="Suicidal Ideation") +
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
-	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top") 
+	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 write.csv(proband_sui_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_sui_mod.csv", row.names=FALSE)
 
@@ -378,7 +378,7 @@ comb_df$PTD003 <- factor(comb_df$PTD003)
 proband_phys_plot <- ggplot(comb_df[!is.na(comb_df$PTD003),], aes_string(x="internal_bifactor_P", fill="PTD003", color="PTD003")) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.5) + labs(fill = "Physical Assault", color="Physical Assault") +
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
-	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top") 
+	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 write.csv(proband_phys_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_phys_mod.csv", row.names=FALSE)
 
@@ -403,7 +403,7 @@ comb_df$PTD004 <- factor(comb_df$PTD004)
 proband_sex_plot <- ggplot(comb_df[!is.na(comb_df$PTD004),], aes_string(x="internal_bifactor_P", fill="PTD004", color="PTD004")) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.5) + labs(fill = "Sexual Assault", color="Sexual Assault") +
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
-	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top") 
+	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 write.csv(proband_sex_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_sex_mod.csv", row.names=FALSE)
 
@@ -473,7 +473,7 @@ for (i in 1:nrow(collateral_phys_mod2)) {
 collateral_phys_plot <- ggplot(comb_df[!is.na(comb_df$PTD003),], aes_string(x="internal_bifactor_C", fill="PTD003", color="PTD003")) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.5) + labs(fill = "Physical Assault", color="Physical Assault") +
 	labs(title="Lifetime Internalizing Severity (Collaterals)", x="Internalizing Severity", y="# of Collaterals") +
-	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top") 
+	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 write.csv(collateral_phys_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_phys_mod.csv", row.names=FALSE)
 
@@ -494,7 +494,7 @@ for (i in 1:nrow(collateral_sex_mod2)) {
 collateral_sex_plot <- ggplot(comb_df[!is.na(comb_df$PTD004),], aes_string(x="internal_bifactor_C", fill="PTD004", color="PTD004")) + theme_minimal() +
 	geom_histogram(position="identity", alpha=0.5) + labs(fill = "Sexual Assault", color="Sexual Assault") +
 	labs(title="Lifetime Internalizing Severity (Collaterals)", x="Internalizing Severity", y="# of Collaterals") +
-	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top") 
+	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
 write.csv(collateral_sex_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_sex_mod.csv", row.names=FALSE)
 
@@ -549,9 +549,9 @@ grid.arrange(collateral_sex_plot, tableGrob(collateral_sex_mod2), ncol=2)
 grid.arrange(collateral_speed_plot, tableGrob(collateral_speed_mod2), ncol=2)
 dev.off()
 
-#### Old Figure 2 - November 5, 2019: No longer in the paper. Tested for mean differences here 
-#### (controling for other metrics), but ran logistic regression for actual analysis, so 
-#### too confusing to put in this plot. 
+#### Old Figure 2 - November 5, 2019: No longer in the paper. Tested for mean differences here
+#### (controling for other metrics), but ran logistic regression for actual analysis, so
+#### too confusing to put in this plot.
 comb_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/comb.csv")
 proband_conv_df <- data.frame(matrix(NA, nrow=3, ncol=4))
 colnames(proband_conv_df) <- c("Question", "Answer", "Coef", "SE")
@@ -574,11 +574,11 @@ proband_conv_df$Question <- factor(proband_conv_df$Question, levels=c("SUI", "PH
 proband_conv_df$Answer <- factor(proband_conv_df$Answer)
 
 subtit <- "INT ~  A + B*Age + C*Gender + D*Question ('Yes' = 1)"
-proband_conv_plot <- ggplot(proband_conv_df, aes(x=Question, y=Coef, fill=Question)) + geom_bar(stat="identity", position=position_dodge()) + 
+proband_conv_plot <- ggplot(proband_conv_df, aes(x=Question, y=Coef, fill=Question)) + geom_bar(stat="identity", position=position_dodge()) +
 	theme_minimal() + scale_fill_manual(values=c("royalblue3", "mediumaquamarine", "maroon4")) +
 	geom_errorbar(aes(ymin=Coef-2*SE, ymax=Coef+2*SE), width=.2, position=position_dodge(.9)) + ylab("Question Coefficient (95% CI)") +
 	ggtitle("Probands: Convergent Validity", subtitle=subtit) + scale_y_continuous(limits=c(0, 1.25), breaks=seq(0, 1.25, .25)) +
-	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=14), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.position = "none", legend.title = element_blank()) 
+	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=14), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.position = "none", legend.title = element_blank())
 
 collateral_conv_df <- data.frame(matrix(NA, nrow=3, ncol=4))
 colnames(collateral_conv_df) <- c("Question", "Answer", "Coef", "SE")
@@ -601,11 +601,11 @@ collateral_conv_df$Question <- factor(collateral_conv_df$Question, levels=c("SUI
 collateral_conv_df$Answer <- factor(collateral_conv_df$Answer)
 
 subtit <- "INT ~  A + B*Age + C*Gender + D*Question ('Yes' = 1)"
-collateral_conv_plot <- ggplot(collateral_conv_df, aes(x=Question, y=Coef, fill=Question)) + geom_bar(stat="identity", position=position_dodge()) + 
+collateral_conv_plot <- ggplot(collateral_conv_df, aes(x=Question, y=Coef, fill=Question)) + geom_bar(stat="identity", position=position_dodge()) +
 	theme_minimal() + scale_fill_manual(values=c("royalblue3", "mediumaquamarine", "maroon4")) +
 	geom_errorbar(aes(ymin=Coef-2*SE, ymax=Coef+2*SE), width=.2, position=position_dodge(.9)) + ylab("Question Coefficient (95% CI)") +
 	ggtitle("Collaterals: Convergent Validity", subtitle=subtit) + scale_y_continuous(limits=c(0, 1.25), breaks=seq(0, 1.25, .25)) +
-	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=14), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.position = "none", legend.title = element_blank()) 
+	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=14), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.position = "none", legend.title = element_blank())
 
 #pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure2/figure2.pdf", width=14, height=6)
 #grid.arrange(proband_conv_plot, collateral_conv_plot, ncol=2)
@@ -618,11 +618,11 @@ comb_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/comb.csv")
 
 ### Correlation plots
 subtit <- paste0("Female r=", round(cor(comb_df[comb_df$sex == "Female", "internal_bifactor_P"], comb_df[comb_df$sex == "Female", "internal_bifactor_C"]), digits=3), ", Male r=", round(cor(comb_df[comb_df$sex == "Male", "internal_bifactor_P"], comb_df[comb_df$sex == "Male", "internal_bifactor_C"]), digits=3))
-corr_plot <- ggplot(comb_df, aes(x=internal_bifactor_P, y=internal_bifactor_C, fill=sex, color=sex)) + 
+corr_plot <- ggplot(comb_df, aes(x=internal_bifactor_P, y=internal_bifactor_C, fill=sex, color=sex)) +
 	geom_point(alpha=.5) + theme_minimal() + scale_x_continuous(limits=c(-1.25, 2.75), breaks=seq(-1.25, 2.75, .25)) + scale_y_continuous(limits=c(-1.25, 2.75), breaks=seq(-1.25, 2.75, .25)) +
 	labs(title="Internalizing Severity", subtitle=subtit, x="Proband-Reported", y="Collateral-Reported", fill="Gender", color="Gender") + geom_abline(slope=1, intercept=0, linetype="dashed") +
 	scale_color_manual(values=c("plum2", "steelblue4")) + scale_fill_manual(values=c("plum1", "steelblue3")) +
-	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=12), legend.title = element_text(size=15), legend.text = element_text(size=12), axis.text.x= element_text(angle=90)) 
+	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=12), legend.title = element_text(size=15), legend.text = element_text(size=12), axis.text.x= element_text(angle=90))
 
 pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure2.pdf", width=7, height=6)
 corr_plot
@@ -641,7 +641,7 @@ rownames(proband_int_sex_table) <- NULL
 
 subtit=paste0("Gender SS: ", proband_int_sex_table[1,"SS"], ", Resid SS: ", proband_int_sex_table[2,"SS"], ", p<.00001")
 proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
-	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") + 
+	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") +
 	theme(legend.position="top") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
 	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
 	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Probands: Internalizing Severity",
@@ -661,10 +661,10 @@ collateral_int_sex_table$P <- c("< .00001", "")
 
 subtit=paste0("Gender SS: ", collateral_int_sex_table[1,"SS"], ", Resid SS: ", collateral_int_sex_table[2,"SS"], ", p<.00001")
 collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
-	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), 
+	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12),
 	theme(legend.position="top") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
 	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Collaterals: Internalizing Severity", 
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Collaterals: Internalizing Severity",
 	labs(subtitle=subtit, x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
@@ -677,7 +677,7 @@ dev.off()
 
 
 # Disagreement greater for one sex than another?
-diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/sex_diff_int.csv") 
+diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/sex_diff_int.csv")
 
 
 diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, color=sex)) + theme_minimal(base_size=8) +
@@ -717,12 +717,12 @@ prop_disagree$ChiSq <- round(prop_disagree$ChiSq, digits=2)
 prop_disagree$BON_P <- round(prop_disagree$BON_P, digits=5)
 prop_disagree$P <- NA
 for (i in 1:nrow(prop_disagree)) {
-	if (prop_disagree[i, "BON_P"] < .00001) { prop_disagree[i, "P"] <- "< .00001" 
-	} else if (prop_disagree[i, "BON_P"] < .0001) { prop_disagree[i, "P"] <- "< .0001" 
-	} else if (prop_disagree[i, "BON_P"] < .001) { prop_disagree[i, "P"] <- "< .001" 
-	} else if (prop_disagree[i, "BON_P"] < .01) { prop_disagree[i, "P"] <- "< .01" 
-	} else if (prop_disagree[i, "BON_P"] < .05) { prop_disagree[i, "P"] <- "< .05" 
-	} else if (prop_disagree[i, "BON_P"] > .05) { prop_disagree[i, "P"] <- "> .05" 
+	if (prop_disagree[i, "BON_P"] < .00001) { prop_disagree[i, "P"] <- "< .00001"
+	} else if (prop_disagree[i, "BON_P"] < .0001) { prop_disagree[i, "P"] <- "< .0001"
+	} else if (prop_disagree[i, "BON_P"] < .001) { prop_disagree[i, "P"] <- "< .001"
+	} else if (prop_disagree[i, "BON_P"] < .01) { prop_disagree[i, "P"] <- "< .01"
+	} else if (prop_disagree[i, "BON_P"] < .05) { prop_disagree[i, "P"] <- "< .05"
+	} else if (prop_disagree[i, "BON_P"] > .05) { prop_disagree[i, "P"] <- "> .05"
 	}
 }
 prop_disagree$BON_P <- NULL
@@ -736,12 +736,12 @@ prop_disagree_F$ChiSq <- round(prop_disagree_F$ChiSq, digits=2)
 prop_disagree_F$BON_P <- round(prop_disagree_F$BON_P, digits=5)
 prop_disagree_F$P <- NA
 for (i in 1:nrow(prop_disagree_F)) {
-	if (prop_disagree_F[i, "BON_P"] < .00001) { prop_disagree_F[i, "P"] <- "< .00001" 
-	} else if (prop_disagree_F[i, "BON_P"] < .0001) { prop_disagree_F[i, "P"] <- "< .0001" 
-	} else if (prop_disagree_F[i, "BON_P"] < .001) { prop_disagree_F[i, "P"] <- "< .001" 
-	} else if (prop_disagree_F[i, "BON_P"] < .01) { prop_disagree_F[i, "P"] <- "< .01" 
-	} else if (prop_disagree_F[i, "BON_P"] < .05) { prop_disagree_F[i, "P"] <- "< .05" 
-	} else if (prop_disagree_F[i, "BON_P"] > .05) { prop_disagree_F[i, "P"] <- "> .05" 
+	if (prop_disagree_F[i, "BON_P"] < .00001) { prop_disagree_F[i, "P"] <- "< .00001"
+	} else if (prop_disagree_F[i, "BON_P"] < .0001) { prop_disagree_F[i, "P"] <- "< .0001"
+	} else if (prop_disagree_F[i, "BON_P"] < .001) { prop_disagree_F[i, "P"] <- "< .001"
+	} else if (prop_disagree_F[i, "BON_P"] < .01) { prop_disagree_F[i, "P"] <- "< .01"
+	} else if (prop_disagree_F[i, "BON_P"] < .05) { prop_disagree_F[i, "P"] <- "< .05"
+	} else if (prop_disagree_F[i, "BON_P"] > .05) { prop_disagree_F[i, "P"] <- "> .05"
 	}
 }
 prop_disagree_F$BON_P <- NULL
@@ -754,12 +754,12 @@ prop_disagree_M$ChiSq <- round(prop_disagree_M$ChiSq, digits=2)
 prop_disagree_M$BON_P <- round(prop_disagree_M$BON_P, digits=5)
 prop_disagree_M$P <- NA
 for (i in 1:nrow(prop_disagree_M)) {
-	if (prop_disagree_M[i, "BON_P"] < .00001) { prop_disagree_M[i, "P"] <- "< .00001" 
-	} else if (prop_disagree_M[i, "BON_P"] < .0001) { prop_disagree_M[i, "P"] <- "< .0001" 
-	} else if (prop_disagree_M[i, "BON_P"] < .001) { prop_disagree_M[i, "P"] <- "< .001" 
-	} else if (prop_disagree_M[i, "BON_P"] < .01) { prop_disagree_M[i, "P"] <- "< .01" 
-	} else if (prop_disagree_M[i, "BON_P"] < .05) { prop_disagree_M[i, "P"] <- "< .05" 
-	} else if (prop_disagree_M[i, "BON_P"] > .05) { prop_disagree_M[i, "P"] <- "> .05" 
+	if (prop_disagree_M[i, "BON_P"] < .00001) { prop_disagree_M[i, "P"] <- "< .00001"
+	} else if (prop_disagree_M[i, "BON_P"] < .0001) { prop_disagree_M[i, "P"] <- "< .0001"
+	} else if (prop_disagree_M[i, "BON_P"] < .001) { prop_disagree_M[i, "P"] <- "< .001"
+	} else if (prop_disagree_M[i, "BON_P"] < .01) { prop_disagree_M[i, "P"] <- "< .01"
+	} else if (prop_disagree_M[i, "BON_P"] < .05) { prop_disagree_M[i, "P"] <- "< .05"
+	} else if (prop_disagree_M[i, "BON_P"] > .05) { prop_disagree_M[i, "P"] <- "> .05"
 	}
 }
 prop_disagree_M$BON_P <- NULL
@@ -843,4 +843,3 @@ agree_sig_table <- rbind(agree_sig_table, notevec)
 
 
 write.csv(agree_sig_table, file="/home/butellyn/parentchild_psychopathology/data/forTables/Table5/table5.csv", row.names=FALSE)
-

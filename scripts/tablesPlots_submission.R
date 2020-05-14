@@ -13,8 +13,8 @@ library('dplyr')
 library('psych')
 
 # Load the data
-proband_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/proband_2019-08-15.csv")
-collateral_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_2019-08-15.csv")
+proband_df <- read.csv("~/Documents/internalizingIRT/data/proband_2019-08-15.csv")
+collateral_df <- read.csv("~/Documents/internalizingIRT/data/collateral_2019-08-15.csv")
 
 items <- c(paste0("ITEM00", 1:9), paste0("ITEM0", 10:35))
 
@@ -28,7 +28,7 @@ peigen_df$eigen <- proband_eigenvalues
 
 pro_eigen_plot <- ggplot(peigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() +
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
-	ggtitle("Adolescent Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
+	ggtitle("Adolescent Scree Plot") + theme(plot.title = element_text(size=12), axis.title = element_text(size=10), axis.text = element_text(size=6))
 
 collateral_eigenvalues <- eigen(polychoric(collateral_df[,items])$rho)$values
 ceigen_df <- data.frame(matrix(NA, nrow=length(collateral_eigenvalues), ncol=2))
@@ -38,9 +38,9 @@ ceigen_df$eigen <- collateral_eigenvalues
 
 coll_eigen_plot <- ggplot(ceigen_df, aes(x=compnum, y=eigen)) + geom_line(stat="identity") + geom_point() + theme_minimal() +
 	xlab("Component Number") + ylab("Eigenvalues of Components") + scale_y_continuous(limits=c(0, 20)) +
-	ggtitle("Caregiver Scree Plot") + theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
+	ggtitle("Caregiver Scree Plot") + theme(plot.title = element_text(size=12), axis.title = element_text(size=10), axis.text = element_text(size=6))
 
-png(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure1.png", width=14, height=6)
+png(file="~/Documents/internalizingIRT/plots/PsychAssess/supplement_figure1.png", width=6, height=3, units="in", res=800)
 grid.arrange(pro_eigen_plot, coll_eigen_plot, ncol=2)
 dev.off()
 
@@ -48,7 +48,7 @@ dev.off()
 ################################ DIF Tables and plots ################################
 # Probands
 # Round #1
-proband_results <- read.csv("/home/butellyn/parentchild_psychopathology/data/proband_dif_withgroups_2019-08-20.csv")
+proband_results <- read.csv("~/Documents/internalizingIRT/data/proband_dif_withgroups_2019-08-20.csv")
 proband_diffaic_hist <- ggplot(proband_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Probands: Differences in AIC (1)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,40), breaks=seq(-130, 40, 10))
 
@@ -97,7 +97,7 @@ for (i in 1:nrow(proband_results)) {
 }
 
 proband_results_final <- proband_results_final[,c("Item", "AIC", "Chi-Sq", "Chi-Sq-P", "Chi-Sq-P-Bon", "Main-P", "Interaction-P")]
-write.csv(proband_results_final, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_dif_withgroups.csv", row.names=FALSE)
+write.csv(proband_results_final, "~/Documents/internalizingIRT/data/forTables/proband_dif_withgroups.csv", row.names=FALSE)
 
 # Round #2
 proband_results2 <- read.csv("/home/butellyn/parentchild_psychopathology/data/proband_dif2_withgroups_2019-08-20.csv")
@@ -149,11 +149,11 @@ for (i in 1:nrow(proband_results2)) {
 }
 
 proband_results2_final <- proband_results2_final[,c("Item", "AIC", "Chi-Sq", "Chi-Sq-P", "Chi-Sq-P-Bon", "Main-P", "Interaction-P")]
-write.csv(proband_results2_final, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_dif2_withgroups.csv", row.names=FALSE)
+write.csv(proband_results2_final, "~/Documents/internalizingIRT/data/forTables/proband_dif2_withgroups.csv", row.names=FALSE)
 
 # Collaterals
 # Round #1
-collateral_results <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_dif_withgroups_2019-08-20.csv")
+collateral_results <- read.csv("~/Documents/internalizingIRT/data/collateral_dif_withgroups_2019-08-20.csv")
 collateral_diffaic_hist <- ggplot(collateral_results, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Collaterals: Differences in AIC (1)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20))#+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10))
 
@@ -202,10 +202,10 @@ for (i in 1:nrow(collateral_results)) {
 }
 
 collateral_results_final <- collateral_results_final[,c("Item", "AIC", "Chi-Sq", "Chi-Sq-P", "Chi-Sq-P-Bon", "Main-P", "Interaction-P")]
-write.csv(collateral_results_final, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_dif_withgroups.csv", row.names=FALSE)
+write.csv(collateral_results_final, "~/Documents/internalizingIRT/data/forTables/collateral_dif_withgroups.csv", row.names=FALSE)
 
 # Round #2
-collateral_results2 <- read.csv("/home/butellyn/parentchild_psychopathology/data/collateral_dif2_2019-08-20.csv")
+collateral_results2 <- read.csv("~/Documents/internalizingIRT/data/collateral_dif2_2019-08-20.csv")
 collateral_diffaic_hist2 <- ggplot(collateral_results2, aes(x=DiffAIC)) + geom_histogram() + theme_minimal() +
 	ggtitle("Collaterals: Differences in AIC (2)") + theme(plot.title = element_text(size=30), axis.title = element_text(size=25), axis.text = element_text(size=20)) #+ scale_x_continuous(limits=c(-130,10), breaks=seq(-130, 10, 10))
 
@@ -254,9 +254,9 @@ for (i in 1:nrow(collateral_results2)) {
 }
 
 collateral_results2_final <- collateral_results2_final[,c("Item", "AIC", "Chi-Sq", "Chi-Sq-P", "Chi-Sq-P-Bon", "Main-P", "Interaction-P")]
-write.csv(collateral_results2_final, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_dif2_withgroups.csv", row.names=FALSE)
+write.csv(collateral_results2_final, "~/Documents/internalizingIRT/data/forTables/collateral_dif2_withgroups.csv", row.names=FALSE)
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/diffaic.pdf", width=16, height=12)
+pdf(file="~/Documents/internalizingIRT/plots/diffaic.pdf", width=16, height=12)
 grid.arrange(proband_diffaic_hist, tableGrob(proband_results_final), ncol=2)
 grid.arrange(proband_diffaic_hist2, tableGrob(proband_results2_final), ncol=2)
 grid.arrange(collateral_diffaic_hist, tableGrob(collateral_results_final), ncol=2)
@@ -309,7 +309,7 @@ table3[3:37,3] <- c(presf2[1,"Chi-Sq"], "", presf2[2:34,"Chi-Sq"])
 table3[3:37,4] <- cresf[,"Chi-Sq"]
 table3[3:37,5] <- c(cresf2[1,"Chi-Sq"], "", cresf2[2:34,"Chi-Sq"])
 
-write.csv(table3, "/home/butellyn/parentchild_psychopathology/data/forTables/Table3/table3.csv", row.names=FALSE)
+write.csv(table3, "~/Documents/internalizingIRT/data/forTables/Table3/table3.csv", row.names=FALSE)
 
 
 
@@ -321,16 +321,16 @@ write.csv(table3, "/home/butellyn/parentchild_psychopathology/data/forTables/Tab
 ################################ Convergent and Discriminant Validity ################################
 library('plyr')
 
-comb_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/comb.csv")
+comb_df <- read.csv("~/Documents/internalizingIRT/data/comb.csv")
 # NOTE: Plotting residuals may be misleading. FIXED in Old Figure 2 to be coefficients from linear model
 comb_df$internal_bifactor_P <- glm(comb_df$internal_bifactor_P ~ factor(comb_df$sex) + comb_df$ageAtClinicalAssess1)$residuals
 comb_df$internal_bifactor_C <- glm(comb_df$internal_bifactor_C ~ factor(comb_df$sex) + comb_df$ageAtClinicalAssess1)$residuals
 
 ## Probands
-proband_sui_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/proband_sui_mod.csv")
-proband_phys_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/proband_phys_mod.csv")
-proband_sex_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/proband_sex_mod.csv")
-proband_speed_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/proband_speed_mod.csv")
+proband_sui_mod <- read.csv("~/Documents/internalizingIRT/data/mods/proband_sui_mod.csv")
+proband_phys_mod <- read.csv("~/Documents/internalizingIRT/data/mods/proband_phys_mod.csv")
+proband_sex_mod <- read.csv("~/Documents/internalizingIRT/data/mods/proband_sex_mod.csv")
+proband_speed_mod <- read.csv("~/Documents/internalizingIRT/data/mods/proband_speed_mod.csv")
 
 # Suicidal ideation
 proband_sui_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -355,7 +355,7 @@ proband_sui_plot <- ggplot(comb_df[!is.na(comb_df$SUI002),], aes_string(x="inter
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(proband_sui_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_sui_mod.csv", row.names=FALSE)
+write.csv(proband_sui_mod2, "~/Documents/internalizingIRT/data/forTables/proband_sui_mod.csv", row.names=FALSE)
 
 
 # Physical assault
@@ -381,7 +381,7 @@ proband_phys_plot <- ggplot(comb_df[!is.na(comb_df$PTD003),], aes_string(x="inte
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(proband_phys_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_phys_mod.csv", row.names=FALSE)
+write.csv(proband_phys_mod2, "~/Documents/internalizingIRT/data/forTables/proband_phys_mod.csv", row.names=FALSE)
 
 # Sexual assault
 proband_sex_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -406,7 +406,7 @@ proband_sex_plot <- ggplot(comb_df[!is.na(comb_df$PTD004),], aes_string(x="inter
 	labs(title="Lifetime Internalizing Severity (Probands)", x="Internalizing Severity", y="# of Probands") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(proband_sex_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_sex_mod.csv", row.names=FALSE)
+write.csv(proband_sex_mod2, "~/Documents/internalizingIRT/data/forTables/proband_sex_mod.csv", row.names=FALSE)
 
 # Motor speed
 proband_speed_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -426,14 +426,14 @@ proband_speed_plot <- ggplot(comb_df, aes_string(y="internal_bifactor_P", x="mot
 	geom_point() + labs(title="Discriminant Validity", y="Internalizing Severity", x="Motor Speed") +
 	theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
-write.csv(proband_speed_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/proband_speed_mod.csv", row.names=FALSE)
+write.csv(proband_speed_mod2, "~/Documents/internalizingIRT/data/forTables/proband_speed_mod.csv", row.names=FALSE)
 
 
 ## Collaterals
-collateral_sui_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/collateral_sui_mod.csv")
-collateral_phys_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/collateral_phys_mod.csv")
-collateral_sex_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/collateral_sex_mod.csv")
-collateral_speed_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/collateral_speed_mod.csv")
+collateral_sui_mod <- read.csv("~/Documents/internalizingIRT/data/mods/collateral_sui_mod.csv")
+collateral_phys_mod <- read.csv("~/Documents/internalizingIRT/data/mods/collateral_phys_mod.csv")
+collateral_sex_mod <- read.csv("~/Documents/internalizingIRT/data/mods/collateral_sex_mod.csv")
+collateral_speed_mod <- read.csv("~/Documents/internalizingIRT/data/mods/collateral_speed_mod.csv")
 
 # Suicidal ideation
 collateral_sui_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -454,7 +454,7 @@ collateral_sui_plot <- ggplot(comb_df[!is.na(comb_df$SUI002),], aes_string(x="in
 	labs(title="Lifetime Internalizing Severity (Collaterals)", x="Internalizing Severity", y="# of Collaterals") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(collateral_sui_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_sui_mod.csv", row.names=FALSE)
+write.csv(collateral_sui_mod2, "~/Documents/internalizingIRT/data/forTables/collateral_sui_mod.csv", row.names=FALSE)
 
 
 # Physical assault
@@ -476,7 +476,7 @@ collateral_phys_plot <- ggplot(comb_df[!is.na(comb_df$PTD003),], aes_string(x="i
 	labs(title="Lifetime Internalizing Severity (Collaterals)", x="Internalizing Severity", y="# of Collaterals") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(collateral_phys_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_phys_mod.csv", row.names=FALSE)
+write.csv(collateral_phys_mod2, "~/Documents/internalizingIRT/data/forTables/collateral_phys_mod.csv", row.names=FALSE)
 
 # Sexual assault
 collateral_sex_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -497,7 +497,7 @@ collateral_sex_plot <- ggplot(comb_df[!is.na(comb_df$PTD004),], aes_string(x="in
 	labs(title="Lifetime Internalizing Severity (Collaterals)", x="Internalizing Severity", y="# of Collaterals") +
 	theme(plot.title = element_text(size=15), axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold"), legend.position="top")
 
-write.csv(collateral_sex_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_sex_mod.csv", row.names=FALSE)
+write.csv(collateral_sex_mod2, "~/Documents/internalizingIRT/data/forTables/collateral_sex_mod.csv", row.names=FALSE)
 
 # Motor speed
 collateral_speed_mod2 <- data.frame(matrix(NA, nrow=4, ncol=3))
@@ -517,7 +517,7 @@ collateral_speed_plot <- ggplot(comb_df, aes_string(y="internal_bifactor_C", x="
 	geom_point() + labs(title="Discriminant Validity", y="Internalizing Severity", x="Motor Speed") +
 	theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15))
 
-write.csv(collateral_speed_mod2, "/home/butellyn/parentchild_psychopathology/data/forTables/collateral_speed_mod.csv", row.names=FALSE)
+write.csv(collateral_speed_mod2, "~/Documents/internalizingIRT/data/forTables/collateral_speed_mod.csv", row.names=FALSE)
 
 # Combine tables
 table4 <- data.frame(matrix(NA, nrow=18, ncol=6))
@@ -535,11 +535,11 @@ table4[15:18, 5:6] <- as.matrix(collateral_speed_mod2[,2:3])
 noterow <- c("Note: For categorical DVs, the statistic is a z-score and for continuous it is a t-value.", "", "", "", "", "")
 table4 <- rbind(table4, noterow)
 
-write.csv(table4, "/home/butellyn/parentchild_psychopathology/data/forTables/Table4/table4.csv", row.names=FALSE)
+write.csv(table4, "~/Documents/internalizingIRT/data/forTables/Table4/table4.csv", row.names=FALSE)
 
 
 # Export plots
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/validity.pdf", width=10, height=6)
+pdf(file="~/Documents/internalizingIRT/plots/validity.pdf", width=10, height=6)
 grid.arrange(proband_sui_plot, tableGrob(proband_sui_mod2), ncol=2)
 grid.arrange(proband_phys_plot, tableGrob(proband_phys_mod2), ncol=2)
 grid.arrange(proband_sex_plot, tableGrob(proband_sex_mod2), ncol=2)
@@ -551,9 +551,9 @@ grid.arrange(collateral_speed_plot, tableGrob(collateral_speed_mod2), ncol=2)
 dev.off()
 
 #### Old Figure 2 - November 5, 2019: No longer in the paper. Tested for mean differences here
-#### (controling for other metrics), but ran logistic regression for actual analysis, so
+#### (controlling for other metrics), but ran logistic regression for actual analysis, so
 #### too confusing to put in this plot.
-comb_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/comb.csv")
+comb_df <- read.csv("~/Documents/internalizingIRT/data/comb.csv")
 proband_conv_df <- data.frame(matrix(NA, nrow=3, ncol=4))
 colnames(proband_conv_df) <- c("Question", "Answer", "Coef", "SE")
 proband_conv_df$Question <- c("SUI",  "PHYS", "SEX")
@@ -608,29 +608,29 @@ collateral_conv_plot <- ggplot(collateral_conv_df, aes(x=Question, y=Coef, fill=
 	ggtitle("Collaterals: Convergent Validity", subtitle=subtit) + scale_y_continuous(limits=c(0, 1.25), breaks=seq(0, 1.25, .25)) +
 	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=14), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.position = "none", legend.title = element_blank())
 
-#pdf(file="/home/butellyn/parentchild_psychopathology/plots/Figure2/figure2.pdf", width=14, height=6)
+#pdf(file="~/Documents/internalizingIRT/plots/Figure2/figure2.pdf", width=14, height=6)
 #grid.arrange(proband_conv_plot, collateral_conv_plot, ncol=2)
 #dev.off()
 
 
 ################ Females worse internalizing than males (according to proband and collateral) ################
 
-comb_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/comb.csv")
+comb_df <- read.csv("~/Documents/internalizingIRT/data/comb.csv")
 
 ### Correlation plots
 subtit <- paste0("Female r=", round(cor(comb_df[comb_df$sex == "Female", "internal_bifactor_P"], comb_df[comb_df$sex == "Female", "internal_bifactor_C"]), digits=3), ", Male r=", round(cor(comb_df[comb_df$sex == "Male", "internal_bifactor_P"], comb_df[comb_df$sex == "Male", "internal_bifactor_C"]), digits=3))
 corr_plot <- ggplot(comb_df, aes(x=internal_bifactor_P, y=internal_bifactor_C, fill=sex, color=sex)) +
 	geom_point(alpha=.5) + theme_minimal() + scale_x_continuous(limits=c(-1.25, 2.75), breaks=seq(-1.25, 2.75, .25)) + scale_y_continuous(limits=c(-1.25, 2.75), breaks=seq(-1.25, 2.75, .25)) +
-	labs(title="Internalizing Severity", subtitle=subtit, x="Proband-Reported", y="Collateral-Reported", fill="Gender", color="Gender") + geom_abline(slope=1, intercept=0, linetype="dashed") +
+	labs(title="Internalizing Severity", subtitle=subtit, x="Adolescent-Reported", y="Caregiver-Reported", fill="Gender", color="Gender") + geom_abline(slope=1, intercept=0, linetype="dashed") +
 	scale_color_manual(values=c("plum2", "steelblue4")) + scale_fill_manual(values=c("plum1", "steelblue3")) +
 	theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=12), legend.title = element_text(size=15), legend.text = element_text(size=12), axis.text.x= element_text(angle=90))
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/JAACAP/supplement_figure2.pdf", width=7, height=6)
+pdf(file="~/Documents/internalizingIRT/plots/PsychAssess/supplement_figure2.pdf", width=7, height=6)
 corr_plot
 dev.off()
 
 # Probands
-proband_int_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/proband_internalizing.csv")
+proband_int_mod <- read.csv("~/Documents/internalizingIRT/data/mods/proband_internalizing.csv")
 proband_int_sex_table <- data.frame(matrix(NA, nrow=2, ncol=5))
 colnames(proband_int_sex_table) <- c("Variable", "Df", "SS", "Iter", "P")
 proband_int_sex_table$Variable <- c("Gender", "Residuals")
@@ -641,17 +641,17 @@ proband_int_sex_table$P <- c("< .00001", "")
 rownames(proband_int_sex_table) <- NULL
 
 subtit=paste0("Gender SS: ", proband_int_sex_table[1,"SS"], ", Resid SS: ", proband_int_sex_table[2,"SS"], ", p<.00001")
-proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
-	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top") +
+proband_sex_plot <- ggplot(proband_df, aes(x=internal_bifactor, fill=sex)) + theme_minimal(base_size=8) +
 	theme(legend.position="top") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(proband_df[proband_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
-	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
+	geom_histogram(aes(fill=sex, group=1), data=proband_df[proband_df$sex == "Female",]) +
+	geom_histogram(aes(fill=sex, group=1), data=proband_df[proband_df$sex == "Male",], alpha=0.6) +
 	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Probands: Internalizing Severity",
-	labs(subtitle=subtit, x="Internalizing Severity", y="# of Probands", fill="Gender", color="Gender") +
+	labs(subtitle=subtit, x="Internalizing Severity", y="# of Adolescents", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
 
 # Collaterals
-collateral_int_mod <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/collateral_internalizing.csv")
+collateral_int_mod <- read.csv("~/Documents/internalizingIRT/data/mods/collateral_internalizing.csv")
 collateral_int_sex_table <- data.frame(matrix(NA, nrow=2, ncol=5))
 colnames(collateral_int_sex_table) <- c("Variable", "Df", "SS", "Iter", "P")
 collateral_int_sex_table$Variable <- c("Gender", "Residuals")
@@ -661,16 +661,16 @@ collateral_int_sex_table$Iter <- c("5000", "")
 collateral_int_sex_table$P <- c("< .00001", "")
 
 subtit=paste0("Gender SS: ", collateral_int_sex_table[1,"SS"], ", Resid SS: ", collateral_int_sex_table[2,"SS"], ", p<.00001")
-collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, color=sex)) + theme_minimal(base_size=8) +
-	#theme(plot.title = element_text(size=25), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12),
+collateral_sex_plot <- ggplot(collateral_df, aes(x=internal_bifactor, fill=sex)) + theme_minimal(base_size=8) +
 	theme(legend.position="top") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Female", "internal_bifactor"]), linetype="longdash", color="black") + geom_vline(xintercept=mean(collateral_df[collateral_df$sex == "Male", "internal_bifactor"]), linetype="longdash", color="gray") +
-	geom_histogram(position="dodge", alpha=0.2) + #annotation_custom(tableGrob(proband_int_sex_table, rows=NULL), ymin=400) +
-	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) + #title="Collaterals: Internalizing Severity",
-	labs(subtitle=subtit, x="Internalizing Severity", y="# of Collaterals", fill="Gender", color="Gender") +
+	geom_histogram(aes(fill=sex, group=1), data=collateral_df[collateral_df$sex == "Female",]) +
+	geom_histogram(aes(fill=sex, group=1), data=collateral_df[collateral_df$sex == "Male",], alpha=0.6) +
+	scale_color_manual(values=c("black", "gray")) + scale_fill_manual(values=c("black", "gray")) +
+	labs(subtitle=subtit, x="Internalizing Severity", y="# of Caregivers", fill="Gender", color="Gender") +
 	scale_y_continuous(limits=c(0, 800))
 
 
-png(file="/home/butellyn/parentchild_psychopathology/plots/JACP/main_figure1.png", width=84, height=140, units='mm', res=300)
+png(file="~/Documents/internalizingIRT/plots/PsychAssess/main_figure1.png", width=84, height=140, units='mm', res=800)
 grid.arrange(proband_sex_plot, collateral_sex_plot, nrow=2)
 dev.off()
 
@@ -678,16 +678,17 @@ dev.off()
 
 
 # Disagreement greater for one sex than another?
-diff_int_sex <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/sex_diff_int.csv")
+diff_int_sex <- read.csv("~/Documents/internalizingIRT/data/mods/sex_diff_int.csv")
 
 
-diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, color=sex)) + theme_minimal(base_size=8) +
-	geom_histogram(position="dodge", alpha=0.2) + #labs(title="Difference Between Informants")
+diff_sex_plot <- ggplot(comb_df, aes(x=IntDiff, fill=sex)) + theme_minimal(base_size=8) +
+	geom_histogram(aes(fill=sex, group=1), data=comb_df[comb_df$sex == "Female",]) +
+	geom_histogram(aes(fill=sex, group=1), data=comb_df[comb_df$sex == "Male",], alpha=0.6) +
 	labs(subtitle=paste0("T=", round(diff_int_sex$T, digits=2), ", p < .00001"), x="Difference on Internalizing Severity", y="# of Pairs", fill="Gender", color="Gender") + geom_vline(xintercept=round(diff_int_sex$F.Mean, digits=3), linetype = "longdash", color="black") + geom_vline(xintercept=round(diff_int_sex$M.Mean, digits=3), linetype = "longdash", color="gray") + geom_vline(xintercept=0) +
-	scale_color_manual(values=c("black", "gray")) + theme(legend.position="top")
+	scale_fill_manual(values=c("black", "gray")) + theme(legend.position="top")
 	#theme(plot.title = element_text(size=25), plot.subtitle = element_text(size=15), axis.title = element_text(size=20), axis.text = element_text(size=15), legend.title = element_text(size=15), legend.text = element_text(size=12), legend.position="top")
 
-png(file="/home/butellyn/parentchild_psychopathology/plots/JACP/main_figure2.png", width=84, height=84, units='mm', res=300) #height used to be 2
+png(file="~/Documents/internalizingIRT/plots/PsychAssess/main_figure2.png", width=84, height=84, units='mm', res=800) #height used to be 2
 diff_sex_plot
 dev.off()
 
@@ -713,7 +714,7 @@ items <- c(paste0("ITEM00", 1:9), paste0("ITEM0", 10:35))
 
 # Results
 # Both
-prop_disagree <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/prop_disagree.csv")
+prop_disagree <- read.csv("~/Documents/internalizingIRT/data/mods/prop_disagree.csv")
 prop_disagree$ChiSq <- round(prop_disagree$ChiSq, digits=2)
 prop_disagree$BON_P <- round(prop_disagree$BON_P, digits=5)
 prop_disagree$P <- NA
@@ -728,11 +729,11 @@ for (i in 1:nrow(prop_disagree)) {
 }
 prop_disagree$BON_P <- NULL
 colnames(prop_disagree) <- c("Both: Item", "Chi-Sq", "P (Bon)")
-write.csv(prop_disagree, file="/home/butellyn/parentchild_psychopathology/data/forTables/prop_disagree_clean.csv", row.names=FALSE)
+write.csv(prop_disagree, file="~/Documents/internalizingIRT/data/forTables/prop_disagree_clean.csv", row.names=FALSE)
 
 
 # Females
-prop_disagree_F <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/prop_disagree_F.csv")
+prop_disagree_F <- read.csv("~/Documents/internalizingIRT/data/mods/prop_disagree_F.csv")
 prop_disagree_F$ChiSq <- round(prop_disagree_F$ChiSq, digits=2)
 prop_disagree_F$BON_P <- round(prop_disagree_F$BON_P, digits=5)
 prop_disagree_F$P <- NA
@@ -747,10 +748,10 @@ for (i in 1:nrow(prop_disagree_F)) {
 }
 prop_disagree_F$BON_P <- NULL
 colnames(prop_disagree_F) <- c("Females: Item", "Chi-Sq", "P (Bon)")
-write.csv(prop_disagree_F, file="/home/butellyn/parentchild_psychopathology/data/forTables/prop_disagree_clean_F.csv", row.names=FALSE)
+write.csv(prop_disagree_F, file="~/Documents/internalizingIRT/data/forTables/prop_disagree_clean_F.csv", row.names=FALSE)
 
 # Males
-prop_disagree_M <- read.csv("/home/butellyn/parentchild_psychopathology/data/mods/prop_disagree_M.csv")
+prop_disagree_M <- read.csv("~/Documents/internalizingIRT/data/mods/prop_disagree_M.csv")
 prop_disagree_M$ChiSq <- round(prop_disagree_M$ChiSq, digits=2)
 prop_disagree_M$BON_P <- round(prop_disagree_M$BON_P, digits=5)
 prop_disagree_M$P <- NA
@@ -765,16 +766,16 @@ for (i in 1:nrow(prop_disagree_M)) {
 }
 prop_disagree_M$BON_P <- NULL
 colnames(prop_disagree_M) <- c("Males: Item", "Chi-Sq", "P (Bon)")
-write.csv(prop_disagree_M, file="/home/butellyn/parentchild_psychopathology/data/forTables/prop_disagree_clean_M.csv", row.names=FALSE)
+write.csv(prop_disagree_M, file="~/Documents/internalizingIRT/data/forTables/prop_disagree_clean_M.csv", row.names=FALSE)
 
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/disagree_sig_table.pdf", width=10, height=12)
+pdf(file="~/Documents/internalizingIRT/plots/disagree_sig_table.pdf", width=10, height=12)
 grid.arrange(tableGrob(prop_disagree), tableGrob(prop_disagree_F), tableGrob(prop_disagree_M), ncol=3) # Figure out how to get rid of rownames in table
 dev.off()
 
 
 
 # Table
-agree_df <- read.csv("/home/butellyn/parentchild_psychopathology/data/agreement.csv")
+agree_df <- read.csv("~/Documents/internalizingIRT/data/agreement.csv")
 
 agree_table <- data.frame(matrix(NA, ncol=9, nrow=37))
 colnames(agree_table) <- c("", "Male Probands", "", "", "", "Female Probands", "", "", "")
@@ -810,11 +811,11 @@ for (item in items) {
 }
 
 rownames(agree_table) <- c()
-pdf(file="/home/butellyn/parentchild_psychopathology/plots/agree_table.pdf", width=10, height=12)
+pdf(file="~/Documents/internalizingIRT/plots/agree_table.pdf", width=10, height=12)
 grid.arrange(tableGrob(agree_table)) # Figure out how to get rid of rownames in table
 dev.off()
 
-write.csv(agree_table, file="/home/butellyn/parentchild_psychopathology/data/agree_table.csv", row.names=FALSE)
+write.csv(agree_table, file="~/Documents/internalizingIRT/data/agree_table.csv", row.names=FALSE)
 
 # Create a version of the table that has information about significance
 agree_sig_table <- agree_table
@@ -843,4 +844,4 @@ agree_sig_table <- rbind(agree_sig_table, notevec)
 
 
 
-write.csv(agree_sig_table, file="/home/butellyn/parentchild_psychopathology/data/forTables/Table5/table5.csv", row.names=FALSE)
+write.csv(agree_sig_table, file="~/Documents/internalizingIRT/data/forTables/Table5/table5.csv", row.names=FALSE)
